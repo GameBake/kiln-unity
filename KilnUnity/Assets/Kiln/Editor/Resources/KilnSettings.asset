@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f5f63a6ecc29410eaaab8b7590f39df, type: 3}
+  m_Name: KilnSettings
+  m_EditorClassIdentifier: 
+  _iaps:
+  - Id: dsdads
+    Price: 0
+    Type: 0
+    MetaData: 
+  - Id: ddd
+    Price: 0
+    Type: 0
+    MetaData: 
+  - Id: dddd
+    Price: 0
+    Type: 0
+    MetaData: 
+  - Id: dd
+    Price: 0
+    Type: 0
+    MetaData: 
+  _ads:
+  - Id: dd
+    Type: 0
+  - Id: ss
+    Type: 1
+  - Id: chacha
+    Type: 0
+  - Id: sss
+    Type: 0
