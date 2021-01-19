@@ -54,8 +54,9 @@ public class KilnBridge {
 
         AndroidJavaClass unityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
         AndroidJavaObject activity = unityPlayer.GetStatic<AndroidJavaObject>("currentActivity");
-        AndroidJavaObject context = activity.Call<AndroidJavaObject>("getApplicationContext");
-        // AndroidJavaObject context = activity;
+        // getBaseContext or getApplicationContext
+        // AndroidJavaObject context = activity.Call<AndroidJavaObject>("getApplicationContext");
+        AndroidJavaObject context = activity;
 
         AndroidJavaObject configBuilder = new AndroidJavaObject("io.gamebake.kiln.KilnConfiguration$Builder", context, AD_UNIT_ID);
 
