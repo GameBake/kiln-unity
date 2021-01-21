@@ -26,11 +26,45 @@ public class Main : MonoBehaviour
         Debug.Log("Init button pressed!");
         try
         {
-            await kiln.init();   
+            await kiln.Init();   
             Debug.Log("Initialized"); 
-            Debug.Log("Platform is " + kiln.platformAvailable());
-            await kiln.loadInterstitialAd("lalalala");
-            await kiln.showInterstitialAd("lalalala");
+            Debug.Log("Platform is " + kiln.PlatformAvailable());
+            // await kiln.LoadInterstitialAd("lalalala");
+            // await kiln.ShowInterstitialAd("lalalala");
+            // await kiln.LoadRewardedAd("lalalala");
+            // KilnRewardedAdResponse response = await kiln.ShowRewardedAd("lalalala");
+            // Debug.Log(response.getPlacementID());
+            // await kiln.SetUserScore(123, null);
+            // KilnScore score = await kiln.GetUserScore(null);
+            // Debug.Log(score.getScore());
+            // List<KilnScore> scores = await kiln.GetScores(10, 0, "lalala");
+            // foreach(KilnScore score in scores) {
+            //     Debug.Log(score.ToString());
+            // }
+            // List<KilnProduct> items = await kiln.GetAvailableProducts();
+            // foreach(KilnProduct item in items) {
+            //     Debug.Log(item.ToString());
+            // }
+            // List<KilnPurchase> items = await kiln.GetPurchasedProducts();
+            // foreach(KilnPurchase item in items) {
+            //     Debug.Log(item.ToString());
+            // }
+
+            KilnPurchase purchase = await kiln.PurchaseProduct("SKU010", null);
+
+            List<KilnPurchase> items = await kiln.GetPurchasedProducts();
+            foreach(KilnPurchase item in items) {
+                Debug.Log(item.ToString());
+            }
+            Debug.Log("###############################################");
+            await kiln.ConsumePurchasedProduct(purchase.GetPurchaseToken());
+
+            items = await kiln.GetPurchasedProducts();
+            foreach(KilnPurchase item in items) {
+                Debug.Log(item.ToString());
+            }
+
+
         }
         catch (KilnException ex) 
         {
