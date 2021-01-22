@@ -288,17 +288,6 @@ public class KilnBridge {
     }
 
     /// <summary>
-    /// method <c>platformAvailable</c> to check platform for a custom setting/configuration/option.
-    /// </summary>
-    /// <returns>the platform available</returns>
-    public KilnPlatform PlatformAvailable() 
-    {
-        AndroidJavaClass kClass = new AndroidJavaClass("io.gamebake.kiln.Kiln");
-        AndroidJavaObject platformEnum = kClass.CallStatic<AndroidJavaObject>("platformAvailable");
-        return (KilnPlatform)platformEnum.Call<int>("ordinal");
-    }
-
-    /// <summary>
     /// Use this to check if the underlying platform supports interstitial ads
     /// </summary>
     /// <returns>boolean true if it's supported, false otherwise</returns>
@@ -464,6 +453,29 @@ public class KilnBridge {
     }
 
     /// <summary>
+    /// Retrieves the list of available products to be purchased. If the platform doesn't support
+    /// purchases the Task will get an exception <c>KilnException</c>
+    /// </summary>
+    /// <param name="ids">List of identifiers to retrieve desired products</param>
+    /// <returns></returns>
+    public Task<List<KilnProduct>> GetAvailableProducts(List<string> ids) {
+        var aTcs = new TaskCompletionSource<List<KilnProduct>>();
+
+        AndroidJavaObject arrayList = new AndroidJavaObject("java.util.ArrayList");
+
+        foreach (var item in ids)
+        {
+            arrayList.Call<bool>("add", new AndroidJavaObject("java.lang.String", item));
+        }
+
+        kiln.Call("getAvailableProducts", arrayList, new KilnListCallback<KilnProduct>() {
+            Tcs = aTcs,
+            Wrapper = new KilnProduct()
+        });
+        return aTcs.Task;
+    }
+
+    /// <summary>
     /// It gets the list of products already purchased but still unconsumed. If the platform doesn't support 
     /// purchases the Task will get an exception <c>KilnException</c>
     /// </summary>
@@ -514,6 +526,10 @@ public class KilnBridge {
         return aTcs.Task;
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="evt"></param>
     public void SubmitAnalyticsEvent(KilnAnalyticEvent evt) 
     {
         kiln.Call("submitAnalyticsEvent", evt);
