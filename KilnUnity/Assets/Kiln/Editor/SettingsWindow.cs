@@ -34,11 +34,18 @@ namespace Kiln
 
             if (_settings == null)
             {
-                string[] directories = Directory.GetDirectories(Application.dataPath, "Kiln/Editor/Resources", SearchOption.AllDirectories);
+                // string[] d = Directory.GetDirectories(Application.dataPath, "Kiln", SearchOption.AllDirectories);
+                // foreach (string t in d)
+                // {
+                //     Debug.Log(t);
+                // }
+
+
+                string[] directories = Directory.GetDirectories(Application.dataPath, "Kiln", SearchOption.AllDirectories);
                 string path = "";
                 foreach (var item in directories)
                 { 
-                    path = item.Substring(Application.dataPath.Length + 1);
+                    path = $"{item.Substring(Application.dataPath.Length + 1)}/Editor/Resources";
                     break;
                 }
 

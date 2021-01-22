@@ -22,6 +22,10 @@ namespace Kiln
             }
 
             _text = _text ?? _scrollRect.content.GetComponent<Text>();
+            
+            // We have it disabled by default to prevent a Unity bug where the content size fitter component
+            // generates changes on the scene upon loading it.
+            _text.gameObject.SetActive(true);
 
             if (_text == null)
             {
