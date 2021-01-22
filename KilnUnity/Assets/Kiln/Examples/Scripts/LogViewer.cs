@@ -67,7 +67,26 @@ namespace Kiln
             //     _stickToBottom = false;
             // }
 
-            _text.text += $"{type} -- {condition}\n";
+            string color;
+
+            switch (type)
+            {
+                case LogType.Error:
+                case LogType.Exception:
+                    color = "red";
+                    break;
+
+                case LogType.Warning:
+                    color = "yellow";
+                    break;
+
+                default:
+                    color = "white";
+                    break;
+
+            }
+
+            _text.text += $"<color={color}>{condition}</color>\n";
 
             // if (_stickToBottom)
             // {

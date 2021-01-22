@@ -34,13 +34,6 @@ namespace Kiln
 
             if (_settings == null)
             {
-                // string[] d = Directory.GetDirectories(Application.dataPath, "Kiln", SearchOption.AllDirectories);
-                // foreach (string t in d)
-                // {
-                //     Debug.Log(t);
-                // }
-
-
                 string[] directories = Directory.GetDirectories(Application.dataPath, "Kiln", SearchOption.AllDirectories);
                 string path = "";
                 foreach (var item in directories)
@@ -226,12 +219,52 @@ namespace Kiln
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        private void DrawFeaturesSupport()
+        {
+            EditorGUILayout.BeginVertical();
+
+            bool supportsIAP = EditorGUILayout.Toggle("Supports In App Purchases", _settings.SupportsIAP);
+            if (supportsIAP != _settings.SupportsIAP)
+            {
+                _settings.SupportsIAP = supportsIAP;
+                EditorUtility.SetDirty(_settings);
+            }
+
+            bool supportsLeaderboards = EditorGUILayout.Toggle("Supports Leaderboards", _settings.SupportsLeaderboards);
+            if (supportsLeaderboards != _settings.SupportsLeaderboards)
+            {
+                _settings.SupportsLeaderboards = supportsLeaderboards;
+                EditorUtility.SetDirty(_settings);
+            }
+
+            bool supportsRewardedAds = EditorGUILayout.Toggle("Supports Rewarded Ads", _settings.SupportsRewardedAds);
+            if (supportsRewardedAds != _settings.SupportsRewardedAds)
+            {
+                _settings.SupportsRewardedAds = supportsRewardedAds;
+                EditorUtility.SetDirty(_settings);
+            }
+
+            bool supportsInterstitialAds = EditorGUILayout.Toggle("Supports Interstitial Ads", _settings.SupportsInterstitialAds);
+            if (supportsInterstitialAds != _settings.SupportsInterstitialAds)
+            {
+                _settings.SupportsInterstitialAds = supportsInterstitialAds;
+                EditorUtility.SetDirty(_settings);
+            }
+
+            EditorGUILayout.EndVertical();
+        }
+
         private void OnGUI()
         {
             CheckInitialize();
 
             _ads.DoLayoutList();
             _iaps.DoLayoutList();
+
+            DrawFeaturesSupport();
         }
 
         void OnDestroy()

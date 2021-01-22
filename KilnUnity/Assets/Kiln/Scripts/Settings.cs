@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿#if UNITY_EDITOR
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Kiln
@@ -37,6 +38,31 @@ namespace Kiln
         public List<InAppPurchase> IAPs { get { return _iaps; } }
         [SerializeField] private List<Ad> _ads = new List<Ad>();
         public List<Ad> ADs { get { return _ads; } }
+        [SerializeField] private bool _supportsInterstitialAds = true;
+        public bool SupportsInterstitialAds
+        {
+            get { return _supportsInterstitialAds; }
+            set { _supportsInterstitialAds = value; }
+        }
+        [SerializeField] private bool _supportsRewardedAds = true;
+        public bool SupportsRewardedAds
+        {
+            get { return _supportsRewardedAds; }
+            set { _supportsRewardedAds = value; }
+        }
+        [SerializeField] private bool _supportsLeaderboards = true;
+        public bool SupportsLeaderboards
+        {
+            get { return _supportsLeaderboards; }
+            set { _supportsLeaderboards = value; }
+        }
+        [SerializeField] private bool _supportsIAP = true;
+        public bool SupportsIAP
+        {
+            get { return _supportsIAP; }
+            set { _supportsIAP = value; }
+        }
     }
 
 }
+#endif

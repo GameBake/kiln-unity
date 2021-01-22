@@ -1,6 +1,5 @@
 ﻿
 using System;
-using System.Diagnostics;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -40,6 +39,5 @@ namespace Kiln
         {
             UnityEngine.Debug.LogException(exception, obj);
         }
-
     }
 }

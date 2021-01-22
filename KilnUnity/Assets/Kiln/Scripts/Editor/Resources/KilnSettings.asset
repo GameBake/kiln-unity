@@ -38,3 +38,7 @@ MonoBehaviour:
     Type: 0
   - Id: sss
     Type: 0
+  _supportsInterstitialAds: 1
+  _supportsRewardedAds: 1
+  _supportsLeaderboards: 1
+  _supportsIAP: 1
