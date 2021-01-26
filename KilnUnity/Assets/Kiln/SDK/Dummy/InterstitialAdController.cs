@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Threading.Tasks;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace Kiln
@@ -7,6 +8,9 @@ namespace Kiln
     {
         [SerializeField] private int _autoCloseTime = 5;
         [SerializeField] private Text _autoCloseLabel;
+        [SerializeField] private Text _placementIDLabel;
+
+        private TaskCompletionSource<object> _tcs;
 
         private float _countdown;
 
@@ -16,7 +20,7 @@ namespace Kiln
             _countdown = _autoCloseTime;
         }
         
-        void Update()
+        private void Update()
         {
             if (_countdown > 0)
             {
@@ -30,11 +34,22 @@ namespace Kiln
         }
 
         /// <summary>
+        /// The prefab is disabled by default, display it
+        /// </summary>
+        /// <param name="task">Task Completion Source to communicate once interstitial's done showing</param>
+        public void Show(TaskCompletionSource<object> tcs, string placementId)
+        {
+            _tcs = tcs;
+            _placementIDLabel.text = placementId;
+            gameObject.SetActive(true);
+        }
+
+        /// <summary>
         /// 
         /// </summary>
         public void OnClose()
         {
-            // TODO: Somehow notifiy Kiln API
+            _tcs.SetResult(null);
             Destroy(gameObject);
         }
     }

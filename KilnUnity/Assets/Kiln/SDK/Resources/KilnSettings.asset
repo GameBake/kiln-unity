@@ -15,7 +15,7 @@ MonoBehaviour:
   _iaps:
   - Id: dsdads
     Price: 0
-    Type: 0
+    Type: 1
     MetaData: 
   - Id: ddd
     Price: 0
@@ -38,7 +38,15 @@ MonoBehaviour:
     Type: 0
   - Id: sss
     Type: 0
+  - Id: dsadsad
+    Type: 1
+  _leaderboards:
+  - Id: leaderboard
+    Type: 0
+  - Id: leaderboard2
+    Type: 0
   _supportsInterstitialAds: 1
   _supportsRewardedAds: 1
   _supportsLeaderboards: 1
   _supportsIAP: 1
+  _supportsPlatformLeaderboardUI: 1

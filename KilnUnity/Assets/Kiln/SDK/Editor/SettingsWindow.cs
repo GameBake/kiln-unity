@@ -10,6 +10,7 @@ namespace Kiln
         private static Settings _settings;
         private ReorderableList _ads;
         private ReorderableList _iaps;
+        private ReorderableList _leaderboards;
 
         private bool _initialized = false;
 
@@ -95,6 +96,28 @@ namespace Kiln
                     EditorUtility.SetDirty(_settings);
                 };
                 _iaps.elementHeight = _listItemHeight;
+
+                // Leaderboard list
+                _leaderboards = new ReorderableList(_settings.Leaderboards, typeof(Settings.Leaderboard), false, true, true, true);
+                _leaderboards.drawElementCallback = DrawLeaderboardsListItems;
+                _leaderboards.drawHeaderCallback = (Rect rect) => {
+                    string name = "Leaderboards Setup";
+                    EditorGUI.LabelField(rect, name);
+                };
+                _leaderboards.onRemoveCallback = (ReorderableList list) =>
+                {
+                    // Erase data file if it exists
+                    Leaderboard.Reset(_settings.Leaderboards[list.index].Id);
+                    UnityEditor.AssetDatabase.Refresh();
+                    
+                    _settings.Leaderboards.RemoveAt(list.index);
+                    EditorUtility.SetDirty(_settings);
+                };
+                _leaderboards.onAddCallback = (ReorderableList list) => {
+                    _settings.Leaderboards.Add(new Settings.Leaderboard());
+                    EditorUtility.SetDirty(_settings);
+                };
+                _leaderboards.elementHeight = _listItemHeight;
             }
         }
 
@@ -196,8 +219,8 @@ namespace Kiln
             }
             
             Rect typeRect = new Rect(rect.x + idRect.width + 30, rect.y + itemInputYOffset, rect.width * 0.3f - 30, EditorGUIUtility.singleLineHeight);
-            Settings.InAppPurchaseType type = iap.Type;
-            Settings.InAppPurchaseType newType = (Settings.InAppPurchaseType)EditorGUI.EnumPopup(typeRect, iap.Type);
+            Product.ProductType type = iap.Type;
+            Product.ProductType newType = (Product.ProductType)EditorGUI.EnumPopup(typeRect, iap.Type);
 
             if (newType != iap.Type)
             {
@@ -216,6 +239,69 @@ namespace Kiln
                 _settings.IAPs[index] = iap;
                 
                 EditorUtility.SetDirty(_settings);
+            }
+        }
+
+         /// <summary>
+        /// Leaderboard Item Drawing for the Reorderable List
+        /// </summary>
+        /// <param name="rect"></param>
+        /// <param name="index"></param>
+        /// <param name="isActive"></param>
+        /// <param name="isFocused"></param>
+        void DrawLeaderboardsListItems(Rect rect, int index, bool isActive, bool isFocused)
+        {
+            Settings.Leaderboard leaderboard = _settings.Leaderboards[index];
+
+            float itemInputYOffset = ((_listItemHeight - EditorGUIUtility.singleLineHeight) / 2);
+            
+            Rect idRect = new Rect(rect.x + 15, rect.y + itemInputYOffset, rect.width * 0.5f, EditorGUIUtility.singleLineHeight);
+            string newId = (string) EditorGUI.TextField(idRect, leaderboard.Id);
+
+            if (leaderboard.Id != newId)
+            {
+                // We'll check first if this is not a duplicate ID
+                bool duplicate = false;
+                for (int i = 0; i < _settings.Leaderboards.Count; i++)
+                {
+                    if (index == i) continue;
+
+                    if (newId == _settings.Leaderboards[i].Id)
+                    {
+                        // Duplicate !
+                        Debug.LogError("IDs must be unique.");
+                        duplicate = true;
+                        break;
+                    }
+                }
+                
+                if (!duplicate)
+                {
+                    leaderboard.Id = newId;
+                    _settings.Leaderboards[index] = leaderboard;
+                    
+                    EditorUtility.SetDirty(_settings);
+                }
+            }
+            
+            Rect typeRect = new Rect(rect.x + idRect.width + 30, rect.y + itemInputYOffset, rect.width * 0.3f - 30, EditorGUIUtility.singleLineHeight);
+            Kiln.Leaderboard.LeaderboardType type = leaderboard.Type;
+            Kiln.Leaderboard.LeaderboardType newType = (Kiln.Leaderboard.LeaderboardType)EditorGUI.EnumPopup(typeRect, leaderboard.Type);
+
+            if (newType != leaderboard.Type)
+            {
+                leaderboard.Type = newType;
+                _settings.Leaderboards[index] = leaderboard;
+                
+                EditorUtility.SetDirty(_settings);
+            }
+
+            Rect resetButtonRect = new Rect(rect.x + idRect.width + 45 + typeRect.width, rect.y + itemInputYOffset, rect.width * 0.2f - 45, EditorGUIUtility.singleLineHeight);
+            if (GUI.Button(resetButtonRect, "RESET"))
+            {
+                // Erase data file if it exists
+                Leaderboard.Reset(leaderboard.Id);
+                UnityEditor.AssetDatabase.Refresh();
             }
         }
 
@@ -261,10 +347,25 @@ namespace Kiln
         {
             CheckInitialize();
 
-            _ads.DoLayoutList();
-            _iaps.DoLayoutList();
+            // TODO: Fix this. When entering play mode or exiting we're losing the _settings reference.
+            if(Application.isPlaying ||  _settings == null) return;
 
             DrawFeaturesSupport();
+
+            if (_settings.SupportsRewardedAds || _settings.SupportsInterstitialAds)
+            {
+                _ads.DoLayoutList();
+            }
+
+            if (_settings.SupportsIAP)
+            {
+                _iaps.DoLayoutList();
+            }
+
+            if (_settings.SupportsLeaderboards)
+            {
+                _leaderboards.DoLayoutList();
+            }
         }
 
         void OnDestroy()

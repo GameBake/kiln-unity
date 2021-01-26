@@ -93,6 +93,14 @@ namespace Kiln
             //     _scrollRect.verticalNormalizedPosition = 0;
             // }
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void ClearLog()
+        {
+            _text.text = "";
+        }
     }
 
 }
