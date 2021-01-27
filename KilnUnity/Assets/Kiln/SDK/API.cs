@@ -1,4 +1,4 @@
-﻿#if !UNITY_EDITOR && UNITY
+﻿#if !UNITY_EDITOR && UNITY_ANDROID
 #define ANDROID_DEVICE
 #endif
 
