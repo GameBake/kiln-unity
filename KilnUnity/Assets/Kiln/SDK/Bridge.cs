@@ -200,7 +200,7 @@ namespace Kiln
 #if ANDROID_DEVICE
             return javaInst.Call<string>("toString");
 #endif
-            return $"ID: {GetProductID()}\nPrice: {GetPrice()}\nType: {GetProductType()}";
+            return $"-----\nID: {GetProductID()}\nPrice: {GetPrice()}\nType: {GetProductType()}\n";
         }    
 
     }
@@ -210,8 +210,8 @@ namespace Kiln
         public AndroidJavaObject JavaInst { set => javaInst = value; }
 
 #if UNITY_EDITOR
-        private string _productId;
-        public string ProductID { set { _productId = value; } }
+        private string _productID;
+        public string ProductID { set { _productID = value; } }
         private string _purchaseToken;
         public string PurchaseToken { set { _purchaseToken = value; } }
         private string _developerPayload;
@@ -236,7 +236,7 @@ namespace Kiln
 #if ANDROID_DEVICE
             return javaInst.Call<string>("getProductID");
 #endif
-            return _productId;
+            return _productID;
         }    
 
         public string GetPurchaseTime()
@@ -255,10 +255,14 @@ namespace Kiln
         public string GetSignedRequest()
         {
             return javaInst.Call<string>("getSignedRequest");
-        }    
+        }
 
-        new public string ToString() {
+        new public string ToString()
+        {
+#if ANDROID_DEVICE
             return javaInst.Call<string>("toString");
+#endif
+            return $"-----\nProduct ID: {_productID}\nPurchase Token: {_purchaseToken}\nDeveloper Payload: {_developerPayload}\n";
         }    
 
     }

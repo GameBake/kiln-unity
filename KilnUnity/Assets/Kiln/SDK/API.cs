@@ -558,7 +558,7 @@ namespace Kiln
 
             var aTcs = new TaskCompletionSource<List<Purchase>>();
 
-            aTcs.SetResult(_iap.PurchasedProducts);
+            aTcs.SetResult(_iap.Purchases);
 
             return aTcs.Task;
         }
@@ -593,23 +593,38 @@ namespace Kiln
         /// </summary>
         /// <param name="purchaseToken">the product token</param>
         /// <returns>Task</returns>
-        // public Task ConsumePurchasedProduct(string purchaseToken)
-        // {
-        //     var aTcs = new TaskCompletionSource<object>();
-        //     kiln.Call("consumePurchasedProduct", purchaseToken, new KilnCallback<object>(){
-        //         Tcs = aTcs
-        //     });
-        //     return aTcs.Task;
-        // }
+        public static Task ConsumePurchasedProduct(string purchaseToken)
+        {
+#if ANDROID_DEVICE
+            return Bridge.ConsumePurchasedProduct(purchaseToken);
+#endif
+            CheckInitialized();
+
+            if (!SupportsIAP())
+            {
+                throw new Kiln.Exception("In App Purchases not supported.");
+            }
+
+            var aTcs = new TaskCompletionSource<object>();
+
+            _iap.ConsumePurchasedProduct(purchaseToken);
+
+            aTcs.SetResult(null);
+
+            return aTcs.Task;
+        }
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="evt"></param>
-        // public void SubmitAnalyticsEvent(KilnAnalyticEvent evt) 
-        // {
-        //     kiln.Call("submitAnalyticsEvent", evt);
-        // }
+        public static void SubmitAnalyticsEvent(AnalyticEvent evt)
+        {
+#if ANDROID_DEVICE
+            return Bridge.SubmitAnalyticsEvent(evt);
+#endif
+            CheckInitialized();
+        }
 
     }
 

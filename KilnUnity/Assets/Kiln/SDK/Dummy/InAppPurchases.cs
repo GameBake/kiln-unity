@@ -12,7 +12,7 @@ namespace Kiln
     /// </summary>
     public class InAppPurchases
     {
-        public string storagePath = $"{Application.dataPath}/KilnIAPData.json";
+        private static string _storagePath = $"{Application.persistentDataPath}/KilnIAPData.json";
 
         private static IAPController _iapPrefab;
         public static IAPController IAPPrefab
@@ -36,10 +36,17 @@ namespace Kiln
         [System.Serializable]
         private class IAPState
         {
+            [System.Serializable]
             public struct PendingPurchase
             {
-                public string productID;
-                public string purchaseToken;
+                public string ProductID;
+                public string PurchaseToken;
+
+                public PendingPurchase(string productID, string purchaseToken)
+                {
+                    ProductID = productID;
+                    PurchaseToken = purchaseToken;
+                }
             }
 
             public string[] Purchases;
@@ -50,8 +57,8 @@ namespace Kiln
         private List<Product> _products = new List<Product>();
         public List<Product> Products { get { return _products; } }
         private List<Product> _ownedProducts = new List<Product>();
-        private List<Purchase> _purchasedProducts = new List<Purchase>();
-        public List<Purchase> PurchasedProducts { get { return _purchasedProducts; } }
+        private List<Purchase> _purchases = new List<Purchase>();
+        public List<Purchase> Purchases { get { return _purchases; } }
         private List<Purchase> _nonConsumedPurchases = new List<Purchase>();
         [SerializeField] private IAPState _state;
 
@@ -77,16 +84,15 @@ namespace Kiln
         /// </summary>
         private void Load()
         {
-            if (File.Exists(storagePath))
+            if (File.Exists(_storagePath))
             {
-                _state = JsonUtility.FromJson<IAPState>(File.ReadAllText(storagePath));
-
+                _state = JsonUtility.FromJson<IAPState>(File.ReadAllText(_storagePath));
                 foreach (string purchaseID in _state.Purchases)
                 {
                     Purchase p = new Purchase();
                     p.ProductID = purchaseID;
 
-                    _purchasedProducts.Add(p);
+                    _purchases.Add(p);
                 }
 
                 foreach (string productID in _state.Owned)
@@ -100,11 +106,48 @@ namespace Kiln
                 foreach (IAPState.PendingPurchase pending in _state.NonConsumed)
                 {
                     Purchase p = new Purchase();
-                    p.ProductID = pending.productID;
-                    p.PurchaseToken = pending.purchaseToken;
+                    p.ProductID = pending.ProductID;
+                    p.PurchaseToken = pending.PurchaseToken;
 
                     _nonConsumedPurchases.Add(p);
                 }
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private void Save()
+        {
+            // Fill out the serializable IAPState class with the current state
+            _state.Purchases = new string[_purchases.Count];
+            for (int i = 0; i < _purchases.Count; i++)
+            {
+                _state.Purchases[i] = _purchases[i].GetProductID();
+            }
+
+            _state.Owned = new string[_ownedProducts.Count];
+            for (int i = 0; i < _ownedProducts.Count; i++)
+            {
+                _state.Owned[i] = _ownedProducts[i].GetProductID();
+            }
+
+            _state.NonConsumed = new IAPState.PendingPurchase[_nonConsumedPurchases.Count];
+            for (int i = 0; i < _nonConsumedPurchases.Count; i++)
+            {
+                _state.NonConsumed[i] = new IAPState.PendingPurchase(_nonConsumedPurchases[i].GetProductID(), _nonConsumedPurchases[i].GetPurchaseToken());
+            }
+            File.WriteAllText(_storagePath, JsonUtility.ToJson(_state));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public static void Reset()
+        {
+            if (File.Exists(_storagePath))
+            {
+                File.Delete(_storagePath);
             }
         }
 
@@ -121,6 +164,18 @@ namespace Kiln
             }
 
             throw new Kiln.Exception($"Product {id} not in the catalogue.");
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="p"></param>
+        private void ProcessCompletedPurchase(Purchase p)
+        {
+            _nonConsumedPurchases.Add(p);
+            _purchases.Add(p);
+
+            Save();
         }
 
         #region Public API
@@ -144,26 +199,104 @@ namespace Kiln
         /// <summary>
         /// 
         /// </summary>
+        /// <returns></returns>
+        public List<string> GetNonConsumedIDs()
+        {
+            List<string> ids = new List<string>();
+
+            foreach (Purchase p in _nonConsumedPurchases)
+            {
+                ids.Add(p.GetProductID());
+            }
+
+            return ids;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="productID"></param>
+        /// <returns></returns>
+        public Purchase GetNonConsumedPurchase(string productID)
+        {
+            foreach (Purchase p in _nonConsumedPurchases)
+            {
+                if (p.GetProductID() == productID) return p;
+            }
+
+            throw new Kiln.Exception($"No non consumed IAP with id {productID} found");
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="productID"></param>
         /// <param name="payload"></param>
         /// <returns></returns>
         public Task<Purchase> PurchaseProduct(string productID, string payload)
         {
-            IAPController controller = MonoBehaviour.Instantiate(IAPPrefab);
+            Product p = GetProduct(productID);
 
             var aTcs = new TaskCompletionSource<Purchase>();
 
-            // TODO: Create a callback on the mockup IAPController so we can resume the processing once that's done.
+            // If it's a non consumable, we'll check if it's already owned
+            bool showPurchaseWindow = true;
+            if (p.GetProductType() == Product.ProductType.NON_CONSUMABLE)
+            {
+                foreach (Purchase aux in _purchases)
+                {
+                    if (aux.GetProductID() == productID)
+                    {
+                        aTcs.SetException(new Kiln.Exception($"Product {p.GetProductID()} is a non consumable and already owned."));
+                        showPurchaseWindow = false;
+                        break;
+                    }
+                }
+            }
 
-            controller.Show(aTcs, productID, GetProduct(productID).GetPrice(), payload);
+            if (showPurchaseWindow)
+            {
+                IAPController controller = MonoBehaviour.Instantiate(IAPPrefab);
+                controller.Show(aTcs, productID, p.GetPrice(), payload);
+
+                System.Action<Task<Purchase>> purchaseTracker = async (Task<Purchase> t) =>
+                {
+                    Purchase purchase = await t;
+                    ProcessCompletedPurchase(purchase);
+                };
+
+                purchaseTracker(aTcs.Task);
+            }
 
             return aTcs.Task;
         }
 
-        // public Task ConsumePurchasedProduct(string purchaseToken)
-        // {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="purchaseToken"></param>
+        public void ConsumePurchasedProduct(string purchaseToken)
+        {
+            bool done = false;
+            foreach (Purchase p in _nonConsumedPurchases)
+            {
+                if (p.GetPurchaseToken() == purchaseToken)
+                {
+                    _nonConsumedPurchases.Remove(p);
+                    _ownedProducts.Add(GetProduct(p.GetProductID()));
 
-        // }
+                    done = true;
+                    break;
+                }
+            }
+
+            if (!done)
+            {
+                throw new Kiln.Exception($"No pending purchase with a {purchaseToken} token found.");
+            }
+
+            Save();
+        }
 
         #endregion
     }

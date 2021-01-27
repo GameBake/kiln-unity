@@ -86,6 +86,14 @@ namespace Kiln
                 _iaps.drawHeaderCallback = (Rect rect) => {
                     string name = "In App Purchases Setup";
                     EditorGUI.LabelField(rect, name);
+                    Rect resetButtonRect = new Rect(rect.x + rect.width - 60, rect.y, 100 - 35, EditorGUIUtility.singleLineHeight);
+                    // if (GUI.Button(resetButtonRect, "RESET"))
+                    if (GUI.Button(resetButtonRect, "RESET"))
+                    {
+                        // Erase data file if it exists
+                        InAppPurchases.Reset();
+                        UnityEditor.AssetDatabase.Refresh();
+                    }
                 };
                 _iaps.onRemoveCallback = (ReorderableList list) => {
                     _settings.IAPs.RemoveAt(list.index);
@@ -352,19 +360,24 @@ namespace Kiln
 
             DrawFeaturesSupport();
 
+            GUILayout.Space(20);
+
             if (_settings.SupportsRewardedAds || _settings.SupportsInterstitialAds)
             {
                 _ads.DoLayoutList();
+                GUILayout.Space(20);
             }
 
             if (_settings.SupportsIAP)
             {
                 _iaps.DoLayoutList();
+                GUILayout.Space(20);
             }
 
             if (_settings.SupportsLeaderboards)
             {
                 _leaderboards.DoLayoutList();
+                GUILayout.Space(20);
             }
         }
 

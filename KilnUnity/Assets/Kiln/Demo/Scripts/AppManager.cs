@@ -385,6 +385,32 @@ namespace Kiln
         /// 
         /// </summary>
         /// <returns></returns>
+        public async void OnGetPurchasesButton()
+        {
+            try
+            {
+                List<Purchase> purchases = await Kiln.API.GetPurchasedProducts();
+
+                foreach (Purchase p in purchases)
+                {
+                    Logger.Log(p.ToString());
+                }
+            }
+            catch (Kiln.Exception ex) 
+            {
+                Logger.Log(ex);
+            }
+            catch (System.Exception ex)
+            {
+                Logger.Log(ex.ToString());
+            }
+            return;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public async void OnPurchaseProductButton()
         {
             try
@@ -413,24 +439,26 @@ namespace Kiln
         /// <returns></returns>
         public async void OnConsumeProductButton()
         {
-            // try
-            // {
-            //     string productID = await _idSelector.SelectID(Kiln.API.IAP.GetProductIDs());
-            //     _idSelector.Close();
+            try
+            {
+                string productID = await _idSelector.SelectID(Kiln.API.IAP.GetNonConsumedIDs());
+                _idSelector.Close();
 
-            //     Purchase purchase = await Kiln.API.PurchaseProduct(productID, "DEVELOPER PAYLOAD TEST");
+                Purchase pendingPurchase = Kiln.API.IAP.GetNonConsumedPurchase(productID);
+
+                await Kiln.API.ConsumePurchasedProduct(pendingPurchase.GetPurchaseToken());
                 
-            //     Logger.Log($"Product {purchase.GetProductID()} ready for consumption");
-            // }
-            // catch (Kiln.Exception ex) 
-            // {
-            //     Logger.Log(ex);
-            // }
-            // catch (System.Exception ex)
-            // {
-            //     Logger.Log(ex.ToString());
-            // }
-            // return;
+                Logger.Log($"Product {productID} consumed.");
+            }
+            catch (Kiln.Exception ex) 
+            {
+                Logger.Log(ex);
+            }
+            catch (System.Exception ex)
+            {
+                Logger.Log(ex.ToString());
+            }
+            return;
         }
 
 
@@ -444,6 +472,31 @@ namespace Kiln
         public void OnAnalyticsSectionButton()
         {
             EnableSection(_analyticsSection);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void OnAnalyticsEventButton()
+        {
+            try
+            {
+                // TODO: Finish up implementation when we know what we'll be using
+
+                // AnalyticEvent event = new AnalyticEvent();
+                // Kiln.API.SubmitAnalyticsEvent();
+
+                Logger.Log($"Analytics Event Fired.");
+            }
+            catch (Kiln.Exception ex) 
+            {
+                Logger.Log(ex);
+            }
+            catch (System.Exception ex)
+            {
+                Logger.Log(ex.ToString());
+            }
+            return;
         }
 
         #endregion

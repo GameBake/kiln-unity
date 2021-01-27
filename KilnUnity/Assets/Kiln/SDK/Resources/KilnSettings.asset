@@ -13,20 +13,16 @@ MonoBehaviour:
   m_Name: KilnSettings
   m_EditorClassIdentifier: 
   _iaps:
-  - Id: dsdads
-    Price: 0
+  - Id: Non Consumable
+    Price: 1000
     Type: 1
     MetaData: 
-  - Id: ddd
-    Price: 0
+  - Id: Consumable 1
+    Price: 200
     Type: 0
     MetaData: 
-  - Id: dddd
-    Price: 0
-    Type: 0
-    MetaData: 
-  - Id: dd
-    Price: 0
+  - Id: Consumable 2
+    Price: 300
     Type: 0
     MetaData: 
   _ads:
