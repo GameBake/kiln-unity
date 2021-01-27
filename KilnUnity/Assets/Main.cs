@@ -26,10 +26,28 @@ public class Main : MonoBehaviour
         Debug.Log("Init button pressed!");
         try
         {
-            await kiln.Init();   
+            var config = new KilnConfiguration();
+
+            config.DummyAds = new List<KilnDummyAd> { 
+                new KilnDummyAd() 
+                {
+                    PlacementID="ABC001", 
+                    RewardUser=true, 
+                    AdType=KilnAdType.Rewarded
+                }, 
+                new KilnDummyAd() 
+                {
+                    PlacementID="ABC002",
+                    RewardUser=false,
+                    AdType=KilnAdType.Interstitial
+                }
+            };
+
+            await kiln.Init(config);   
+
             Debug.Log("Initialized"); 
-            // await kiln.LoadInterstitialAd("lalalala");
-            // await kiln.ShowInterstitialAd("lalalala");
+            await kiln.LoadInterstitialAd("ABC002");
+            await kiln.ShowInterstitialAd("ABC002");
             // await kiln.LoadRewardedAd("lalalala");
             // KilnRewardedAdResponse response = await kiln.ShowRewardedAd("lalalala");
             // Debug.Log(response.getPlacementID());
@@ -44,10 +62,10 @@ public class Main : MonoBehaviour
             // foreach(KilnProduct item in items) {
             //     Debug.Log(item.ToString());
             // }
-            List<KilnProduct> items = await kiln.GetAvailableProducts(new List<string>{"SKU010", "SKU050"});
-            foreach(KilnProduct item in items) {
-                Debug.Log(item.ToString());
-            }
+            // List<KilnProduct> items = await kiln.GetAvailableProducts(new List<string>{"SKU010", "SKU050"});
+            // foreach(KilnProduct item in items) {
+            //     Debug.Log(item.ToString());
+            // }
             // List<KilnPurchase> items = await kiln.GetPurchasedProducts();
             // foreach(KilnPurchase item in items) {
             //     Debug.Log(item.ToString());
@@ -71,7 +89,7 @@ public class Main : MonoBehaviour
         }
         catch (KilnException ex) 
         {
-            Debug.Log("Kiln Exception: " + ex);
+            Debug.Log("Kiln Exception: " + ex.Message);
         }
         catch (System.Exception ex)
         {

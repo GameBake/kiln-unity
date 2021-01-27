@@ -15,6 +15,11 @@ public enum KilnPlatform {
     Development
 }
 
+public enum KilnAdType  {
+    Interstitial, 
+    Rewarded
+}
+
 public interface IKilnObjectWrapper {
 
     AndroidJavaObject JavaInst { set;  }
@@ -160,6 +165,21 @@ public class KilnAnalyticEvent : AndroidJavaProxy
 
 }
 
+public class KilnDummyAd 
+{
+    public string PlacementID { get; set; }
+
+    public KilnAdType AdType { get; set; }
+
+    public bool RewardUser { get; set; }
+
+}
+
+public class KilnConfiguration 
+{
+    public List<KilnDummyAd> DummyAds { get; set; }
+}
+
 public class KilnBridge {
 	private AndroidJavaObject kiln;
 
@@ -206,7 +226,7 @@ public class KilnBridge {
         public void onFailure(AndroidJavaObject exception) 
         {
             Debug.Log("KilnCallback onFailure");
-            taskCompletionSource.SetException(new KilnException(exception.ToString()));
+            taskCompletionSource.SetException(new KilnException(exception.Call<string>("toString")));
         }
 
     }
@@ -263,7 +283,7 @@ public class KilnBridge {
 
     }
 
-    public Task Init() 
+    public Task Init(KilnConfiguration configuration) 
     {
         string AD_UNIT_ID = "ad_unit_id";
 
@@ -273,6 +293,27 @@ public class KilnBridge {
         // AndroidJavaObject context = activity.Call<AndroidJavaObject>("getApplicationContext");
 
         AndroidJavaObject configBuilder = new AndroidJavaObject("io.gamebake.kiln.KilnConfiguration$Builder", context, AD_UNIT_ID);
+
+        if (configuration != null && configuration.DummyAds.Count > 0) 
+        {
+            AndroidJavaClass javaEnum = new AndroidJavaClass("io.gamebake.kiln.types.AdType");
+            AndroidJavaObject javaEnumInterstitial = javaEnum.GetStatic<AndroidJavaObject>("Interstitial");
+            AndroidJavaObject javaEnumRewarded = javaEnum.GetStatic<AndroidJavaObject>("Rewarded");
+            AndroidJavaObject javaEnumSel;
+            AndroidJavaObject arrayList = new AndroidJavaObject("java.util.ArrayList");
+
+            foreach (var item in configuration.DummyAds)
+            {
+                if (item.AdType == (KilnAdType)javaEnumInterstitial.Call<int>("ordinal")) {
+                    javaEnumSel = javaEnumInterstitial;
+                } else {
+                    javaEnumSel = javaEnumRewarded;
+                }
+                AndroidJavaObject javaDummyAdd = new AndroidJavaObject("io.gamebake.kiln.types.DummyAd", item.PlacementID, javaEnumSel, item.RewardUser);
+                arrayList.Call<bool>("add", javaDummyAdd);
+            }
+            configBuilder.Call<AndroidJavaObject>("withDummyAds", arrayList);            
+        }
 
         AndroidJavaObject config = configBuilder.Call<AndroidJavaObject>("build");
 
