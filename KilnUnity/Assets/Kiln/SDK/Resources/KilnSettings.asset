@@ -1,0 +1,48 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f5f63a6ecc29410eaaab8b7590f39df, type: 3}
+  m_Name: KilnSettings
+  m_EditorClassIdentifier: 
+  _iaps:
+  - Id: Non Consumable
+    Price: 1000
+    Type: 1
+    MetaData: 
+  - Id: Consumable 1
+    Price: 200
+    Type: 0
+    MetaData: 
+  - Id: Consumable 2
+    Price: 300
+    Type: 0
+    MetaData: 
+  _ads:
+  - Id: dd
+    Type: 0
+  - Id: ss
+    Type: 1
+  - Id: chacha
+    Type: 0
+  - Id: sss
+    Type: 0
+  - Id: dsadsad
+    Type: 1
+  _leaderboards:
+  - Id: leaderboard
+    Type: 0
+  - Id: leaderboard2
+    Type: 0
+  _supportsInterstitialAds: 1
+  _supportsRewardedAds: 1
+  _supportsLeaderboards: 1
+  _supportsIAP: 1
+  _supportsPlatformLeaderboardUI: 1
