@@ -153,20 +153,6 @@ namespace Kiln
         }
 
         /// <summary>
-        /// method <c>platformAvailable</c> to check platform for a custom setting/configuration/option.
-        /// </summary>
-        /// <returns>the platform available</returns>
-        public static Platform PlatformAvailable()
-        {
-#if ANDROID_DEVICE
-            return Bridge.PlatformAvailable();
-#endif
-            CheckInitialized();
-
-            return Platform.Development;
-        }
-
-        /// <summary>
         /// Use this to check if the underlying platform supports interstitial ads
         /// </summary>
         /// <returns>boolean true if it's supported, false otherwise</returns>
@@ -524,6 +510,31 @@ namespace Kiln
         {
 #if ANDROID_DEVICE
             return Bridge.GetAvailableProducts();
+#endif
+            CheckInitialized();
+
+            if (!SupportsIAP())
+            {
+                throw new Kiln.Exception("In App Purchases not supported.");
+            }
+
+            var aTcs = new TaskCompletionSource<List<Product>>();
+
+            aTcs.SetResult(_iap.Products);
+
+            return aTcs.Task;
+        }
+
+        /// <summary>
+        /// Retrieves the list of available products to be purchased. If the platform doesn't support
+        /// purchases the Task will get an exception <c>KilnException</c>
+        /// </summary>
+        /// <param name="ids">List of identifiers to retrieve desired products</param>
+        /// <returns></returns>
+        public Task<List<Product>> GetAvailableProducts(List<string> ids) 
+        {
+#if ANDROID_DEVICE
+            return Bridge.GetAvailableProducts(ids);
 #endif
             CheckInitialized();
 

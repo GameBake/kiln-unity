@@ -6,16 +6,31 @@ using UnityEngine;
 namespace Kiln
 {
     public class Exception : System.Exception {
-    private static readonly string DefaultMessage = "Java Exception.";
+        private static readonly string DefaultMessage = "Java Exception.";
 
-    public Exception() : base(DefaultMessage) { }
-    public Exception(string message) : base(message) { }
-    public Exception(string message, System.Exception innerException)
-    : base(message, innerException) { }    
-}
+        public Exception() : base(DefaultMessage) { }
+        public Exception(string message) : base(message) { }
+        public Exception(string message, System.Exception innerException): base(message, innerException) { }    
+    }
 
-    public enum Platform {
-        Development
+    public enum AdType  {
+        INTERSTITIAL, 
+        REWARDED
+    }
+
+    public class DummyAd 
+    {
+        public string PlacementID { get; set; }
+
+        public AdType AdType { get; set; }
+
+        public bool RewardUser { get; set; }
+
+    }
+
+    public class Configuration 
+    {
+        public List<DummyAd> DummyAds { get; set; }
     }
 
     public interface IKilnObjectWrapper {
@@ -339,7 +354,7 @@ namespace Kiln
             public void onFailure(AndroidJavaObject exception) 
             {
                 Debug.Log("KilnCallback onFailure");
-                taskCompletionSource.SetException(new Exception(exception.ToString()));
+                taskCompletionSource.SetException(new Exception(exception.Call<string>("toString")));
             }
 
         }
@@ -396,7 +411,8 @@ namespace Kiln
 
         }
 
-        public Task Init() 
+        public Task Init(Configuration configuration) 
+
         {
             string AD_UNIT_ID = "ad_unit_id";
 
@@ -406,6 +422,27 @@ namespace Kiln
             // AndroidJavaObject context = activity.Call<AndroidJavaObject>("getApplicationContext");
 
             AndroidJavaObject configBuilder = new AndroidJavaObject("io.gamebake.kiln.KilnConfiguration$Builder", context, AD_UNIT_ID);
+
+            if (configuration != null && configuration.DummyAds.Count > 0) 
+            {
+                AndroidJavaClass javaEnum = new AndroidJavaClass("io.gamebake.kiln.types.AdType");
+                AndroidJavaObject javaEnumInterstitial = javaEnum.GetStatic<AndroidJavaObject>("Interstitial");
+                AndroidJavaObject javaEnumRewarded = javaEnum.GetStatic<AndroidJavaObject>("Rewarded");
+                AndroidJavaObject javaEnumSel;
+                AndroidJavaObject arrayList = new AndroidJavaObject("java.util.ArrayList");
+
+                foreach (var item in configuration.DummyAds)
+                {
+                    if (item.AdType == (AdType)javaEnumInterstitial.Call<int>("ordinal")) {
+                        javaEnumSel = javaEnumInterstitial;
+                    } else {
+                        javaEnumSel = javaEnumRewarded;
+                    }
+                    AndroidJavaObject javaDummyAdd = new AndroidJavaObject("io.gamebake.kiln.types.DummyAd", item.PlacementID, javaEnumSel, item.RewardUser);
+                    arrayList.Call<bool>("add", javaDummyAdd);
+                }
+                configBuilder.Call<AndroidJavaObject>("withDummyAds", arrayList);            
+            }
 
             AndroidJavaObject config = configBuilder.Call<AndroidJavaObject>("build");
 
@@ -418,17 +455,6 @@ namespace Kiln
             });
 
             return aTcs.Task;
-        }
-
-        /// <summary>
-        /// method <c>platformAvailable</c> to check platform for a custom setting/configuration/option.
-        /// </summary>
-        /// <returns>the platform available</returns>
-        public Platform PlatformAvailable() 
-        {
-            AndroidJavaClass kClass = new AndroidJavaClass("io.gamebake.kiln.Kiln");
-            AndroidJavaObject platformEnum = kClass.CallStatic<AndroidJavaObject>("platformAvailable");
-            return (Platform)platformEnum.Call<int>("ordinal");
         }
 
         /// <summary>
@@ -599,8 +625,6 @@ namespace Kiln
             return aTcs.Task;        
         }
 
-        
-
         /// <summary>
         /// It checks if the current platform supports in app purchases
         /// </summary>
@@ -617,6 +641,29 @@ namespace Kiln
         public Task<List<Product>> GetAvailableProducts() {
             var aTcs = new TaskCompletionSource<List<Product>>();
             kiln.Call("getAvailableProducts", new ListCallback<Product>() {
+                Tcs = aTcs,
+                Wrapper = new Product()
+            });
+            return aTcs.Task;
+        }
+
+        /// <summary>
+        /// Retrieves the list of available products to be purchased. If the platform doesn't support
+        /// purchases the Task will get an exception <c>KilnException</c>
+        /// </summary>
+        /// <param name="ids">List of identifiers to retrieve desired products</param>
+        /// <returns></returns>
+        public Task<List<Product>> GetAvailableProducts(List<string> ids) {
+            var aTcs = new TaskCompletionSource<List<Product>>();
+
+            AndroidJavaObject arrayList = new AndroidJavaObject("java.util.ArrayList");
+
+            foreach (var item in ids)
+            {
+                arrayList.Call<bool>("add", new AndroidJavaObject("java.lang.String", item));
+            }
+
+            kiln.Call("getAvailableProducts", arrayList, new ListCallback<Product>() {
                 Tcs = aTcs,
                 Wrapper = new Product()
             });
@@ -674,6 +721,9 @@ namespace Kiln
             return aTcs.Task;
         }
 
+        /// <summary>
+        /// </summary>
+        /// <param name="evt"></param>
         public void SubmitAnalyticsEvent(AnalyticEvent evt) 
         {
             kiln.Call("submitAnalyticsEvent", evt);

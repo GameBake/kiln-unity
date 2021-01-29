@@ -102,7 +102,6 @@ namespace Kiln
                 await Kiln.API.Init();   
                 
                 Logger.Log("Initialized");
-                Logger.Log("Platform is " + Kiln.API.PlatformAvailable());
 
                 _initButton.SetActive(false);
                 _sectionButtons.SetActive(true);

@@ -27,11 +27,28 @@ public class Main : MonoBehaviour
         Debug.Log("Init button pressed!");
         try
         {
-            await kiln.Init();   
+            var config = new Configuration();
+
+            config.DummyAds = new List<DummyAd> { 
+                new DummyAd() 
+                {
+                    PlacementID="ABC001", 
+                    RewardUser=true, 
+                    AdType=AdType.REWARDED
+                }, 
+                new DummyAd() 
+                {
+                    PlacementID="ABC002",
+                    RewardUser=false,
+                    AdType=AdType.INTERSTITIAL
+                }
+            };
+
+            await kiln.Init(config);   
+
             Debug.Log("Initialized"); 
-            Debug.Log("Platform is " + kiln.PlatformAvailable());
-            // await kiln.LoadInterstitialAd("lalalala");
-            // await kiln.ShowInterstitialAd("lalalala");
+            // await kiln.LoadInterstitialAd("ABC002");
+            // await kiln.ShowInterstitialAd("ABC002");
             // await kiln.LoadRewardedAd("lalalala");
             // RewardedAdResponse response = await kiln.ShowRewardedAd("lalalala");
             // Debug.Log(response.getPlacementID());
@@ -50,26 +67,28 @@ public class Main : MonoBehaviour
             // foreach(Purchase item in items) {
             //     Debug.Log(item.ToString());
             // }
+            // List<Product> items = await kiln.GetAvailableProducts(new List<string>{"SKU010", "SKU050"});
+            // foreach(Product item in items) {
+            //     Debug.Log(item.ToString());
+            // }
+            //
+            // Purchase purchase = await kiln.PurchaseProduct("SKU010", null);
 
-            Purchase purchase = await kiln.PurchaseProduct("SKU010", null);
+            // List<Purchase> items = await kiln.GetPurchasedProducts();
+            // foreach(Purchase item in items) {
+            //     Debug.Log(item.ToString());
+            // }
+            // Debug.Log("###############################################");
+            // await kiln.ConsumePurchasedProduct(purchase.GetPurchaseToken());
 
-            List<Purchase> items = await kiln.GetPurchasedProducts();
-            foreach(Purchase item in items) {
-                Debug.Log(item.ToString());
-            }
-            Debug.Log("###############################################");
-            await kiln.ConsumePurchasedProduct(purchase.GetPurchaseToken());
-
-            items = await kiln.GetPurchasedProducts();
-            foreach(Purchase item in items) {
-                Debug.Log(item.ToString());
-            }
-
-
+            // items = await kiln.GetPurchasedProducts();
+            // foreach(Purchase item in items) {
+            //     Debug.Log(item.ToString());
+            // }
         }
         catch (Kiln.Exception ex) 
         {
-            Debug.Log("Kiln Exception: " + ex);
+            Debug.Log("Kiln Exception: " + ex.Message);
         }
         catch (System.Exception ex)
         {
