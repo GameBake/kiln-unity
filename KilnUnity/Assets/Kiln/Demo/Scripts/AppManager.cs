@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace Kiln
 {
@@ -106,6 +105,12 @@ namespace Kiln
 
                 _initButton.SetActive(false);
                 _sectionButtons.SetActive(true);
+
+                // TODO: This needs to be improved and cleaned
+                if (Kiln.API.SupportsIAP())
+                {
+                    IAPHelper.Instance.Products = await Kiln.API.GetAvailableProducts();
+                }
             }
             catch (Kiln.Exception ex) 
             {
@@ -415,11 +420,15 @@ namespace Kiln
         {
             try
             {
-                string productID = await _idSelector.SelectID(Kiln.API.IAP.GetProductIDs());
+                string productID = await _idSelector.SelectID(IAPHelper.Instance.GetProductIDs());
                 _idSelector.Close();
 
                 Purchase purchase = await Kiln.API.PurchaseProduct(productID, "DEVELOPER PAYLOAD TEST");
-                
+
+#if !UNITY_EDITOR && UNITY_ANDROID
+                IAPHelper.Instance.NonConsumedPurchases.Add(purchase);
+#endif
+
                 Logger.Log($"Product {purchase.GetProductID()} ready for consumption");
             }
             catch (Kiln.Exception ex) 
@@ -441,13 +450,17 @@ namespace Kiln
         {
             try
             {
-                string productID = await _idSelector.SelectID(Kiln.API.IAP.GetNonConsumedIDs());
+                string productID = await _idSelector.SelectID(IAPHelper.Instance.GetNonConsumedIDs());
                 _idSelector.Close();
 
-                Purchase pendingPurchase = Kiln.API.IAP.GetNonConsumedPurchase(productID);
+                Purchase pendingPurchase = IAPHelper.Instance.GetNonConsumedPurchase(productID);
 
                 await Kiln.API.ConsumePurchasedProduct(pendingPurchase.GetPurchaseToken());
-                
+
+#if !UNITY_EDITOR && UNITY_ANDROID
+                IAPHelper.Instance.NonConsumedPurchases.Remove(pendingPurchase);
+#endif
+
                 Logger.Log($"Product {productID} consumed.");
             }
             catch (Kiln.Exception ex) 
@@ -462,9 +475,9 @@ namespace Kiln
         }
 
 
-        #endregion
+#endregion
 
-        #region Analytics
+#region Analytics
 
         /// <summary>
         /// 
@@ -499,6 +512,6 @@ namespace Kiln
             return;
         }
 
-        #endregion
+#endregion
     }
 }
