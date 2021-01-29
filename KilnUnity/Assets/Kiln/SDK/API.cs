@@ -110,7 +110,23 @@ namespace Kiln
         public static Task Init()
         {
 #if ANDROID_DEVICE
-            return Bridge.Init();
+            var config = new Configuration();
+
+            config.DummyAds = new List<DummyAd> { 
+                new DummyAd() 
+                {
+                    PlacementID="ABC001", 
+                    RewardUser=true, 
+                    AdType=AdType.REWARDED
+                }, 
+                new DummyAd() 
+                {
+                    PlacementID="ABC002",
+                    RewardUser=false,
+                    AdType=AdType.INTERSTITIAL
+                }
+            };
+            return Bridge.Init(config);
 #else
             var aTcs = new TaskCompletionSource<object>();
 
@@ -154,24 +170,6 @@ namespace Kiln
         }
 
         /// <summary>
-<<<<<<< HEAD
-=======
-        /// method <c>platformAvailable</c> to check platform for a custom setting/configuration/option.
-        /// </summary>
-        /// <returns>the platform available</returns>
-        public static Platform PlatformAvailable()
-        {
-#if ANDROID_DEVICE
-            return Bridge.PlatformAvailable();
-#else
-            CheckInitialized();
-
-            return Platform.Development;
-#endif
-        }
-
-        /// <summary>
->>>>>>> 39c31ec75b7ce3dfdb7c0bf976f867f043f7f4a4
         /// Use this to check if the underlying platform supports interstitial ads
         /// </summary>
         /// <returns>boolean true if it's supported, false otherwise</returns>
@@ -568,7 +566,7 @@ namespace Kiln
         {
 #if ANDROID_DEVICE
             return Bridge.GetAvailableProducts(ids);
-#endif
+#else
             CheckInitialized();
 
             if (!SupportsIAP())
@@ -581,6 +579,7 @@ namespace Kiln
             aTcs.SetResult(_iap.Products);
 
             return aTcs.Task;
+#endif            
         }
 
         /// <summary>
