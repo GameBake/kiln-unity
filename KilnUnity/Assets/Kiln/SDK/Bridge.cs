@@ -39,11 +39,11 @@ namespace Kiln
         }
         public bool getWithReward()
         {
-#if ANDROID_DEVICE
+#if !UNITY_EDITOR
             return javaInst.Call<bool>("getWithReward");
-#endif
-            
+#else       
             return _rewardUser;
+#endif
         }
 
     }
@@ -53,35 +53,41 @@ namespace Kiln
         private AndroidJavaObject javaInst;
         public AndroidJavaObject JavaInst { set => javaInst = value; }
 
-#if UNITY_EDITOR
+        // TODO: Check what we'll do with this pre processors. They're needed for testing
+        // on Android on dev mode, but they shouldn't be there for a release build as no 
+        // Player should me manually created
+// #if UNITY_EDITOR
         private string _id;
         public string ID { set { _id = value;  } }
         private string _name;
         public string Name { set { _name = value; } }
         private string _photoURL;
         public string PhotoURL { set { _photoURL = value; } }
-#endif
+// #endif
 
         public string GetId()
         {
-#if ANDROID_DEVICE
+#if !UNITY_EDITOR
             return javaInst.Call<string>("getId");
-#endif
+#else
             return _id;
+#endif
         }
         public string GetName()
         {
-#if ANDROID_DEVICE
+#if !UNITY_EDITOR
             return javaInst.Call<string>("getName");
-#endif
+#else
             return _name;
+#endif
         }
         public string GetPhotoURL()
         {
-#if ANDROID_DEVICE
+#if !UNITY_EDITOR
             return javaInst.Call<string>("getPhotoURL");
-#endif
+#else
             return _photoURL;
+#endif
         }
     }
 
@@ -90,36 +96,42 @@ namespace Kiln
         private AndroidJavaObject javaInst;
         public AndroidJavaObject JavaInst { set => javaInst = value; }
         
-#if UNITY_EDITOR
+        // TODO: Check what we'll do with this pre processors. They're needed for testing
+        // on Android on dev mode, but they shouldn't be there for a release build as no 
+        // LeaderboardEntry should me manually created
+// #if UNITY_EDITOR
         private double _score;
         public double Score { set { _score = value; } }
         private int _rank;
         public int Rank { set { _rank = value; } }
         private Player _player;
         public Player Player { set { _player = value; } }
-#endif
+// #endif
 
         public double GetScore()
         {
-#if ANDROID_DEVICE
+#if !UNITY_EDITOR
             return javaInst.Call<double>("getScore");
-#endif
+#else
             return _score;
+#endif
         }
         public int GetRank()
         {
-#if ANDROID_DEVICE
+#if !UNITY_EDITOR
             return javaInst.Call<int>("getRank");
-#endif
+#else
             return _rank;
+#endif
         }
 
         public Player GetPlayer()
         {
-#if ANDROID_DEVICE
-            return javaInst.Call<int>("getPlayer");
-#endif
+#if !UNITY_EDITOR
+            return javaInst.Call<Player>("getPlayer");
+#else
             return _player;
+#endif
         }
 
         new public string ToString()
@@ -157,10 +169,11 @@ namespace Kiln
 
         public string GetProductID()
         {
-#if ANDROID_DEVICE
+#if !UNITY_EDITOR
             return javaInst.Call<string>("getProductID");
-#endif
+#else
             return _id;
+#endif
         }
 
         public string GetDescription()
@@ -175,10 +188,11 @@ namespace Kiln
 
         public string GetPrice()
         {
-#if ANDROID_DEVICE
+#if !UNITY_EDITOR
             return javaInst.Call<string>("getPrice");
-#endif
+#else
             return _price;
+#endif
         }
 
         public string GetPriceCurrencyCode()
@@ -188,19 +202,21 @@ namespace Kiln
 
         public ProductType GetProductType()
         {
-#if ANDROID_DEVICE
+#if !UNITY_EDITOR
             // TODO: This was added by me (Bruno). Gotta see what's up on the other side.
-            return javaInst.Call<string>("getProductType");
-#endif
+            return javaInst.Call<ProductType>("getProductType");
+#else
             return _type;
+#endif
         }
 
         new public string ToString()
         {
-#if ANDROID_DEVICE
+#if !UNITY_EDITOR
             return javaInst.Call<string>("toString");
-#endif
+#else
             return $"-----\nID: {GetProductID()}\nPrice: {GetPrice()}\nType: {GetProductType()}\n";
+#endif
         }    
 
     }
@@ -209,22 +225,26 @@ namespace Kiln
         private AndroidJavaObject javaInst;
         public AndroidJavaObject JavaInst { set => javaInst = value; }
 
-#if UNITY_EDITOR
+        // TODO: Check what we'll do with this pre processors. They're needed for testing
+        // on Android on dev mode, but they shouldn't be there for a release build as no 
+        // Purchase should me manually created
+// #if UNITY_EDITOR
         private string _productID;
         public string ProductID { set { _productID = value; } }
         private string _purchaseToken;
         public string PurchaseToken { set { _purchaseToken = value; } }
         private string _developerPayload;
         public string DeveloperPayload { set { _developerPayload= value; } }
-#endif
+// #endif
 
 
         public string GetDeveloperPayload()
         {
-#if ANDROID_DEVICE
+#if !UNITY_EDITOR
             return javaInst.Call<string>("getDeveloperPayload");
-#endif
+#else
             return _developerPayload;
+#endif
         }    
         public string GetPaymentID()
         {
@@ -233,10 +253,11 @@ namespace Kiln
 
         public string GetProductID()
         {
-#if ANDROID_DEVICE
+#if !UNITY_EDITOR
             return javaInst.Call<string>("getProductID");
-#endif
+#else
             return _productID;
+#endif
         }    
 
         public string GetPurchaseTime()
@@ -246,10 +267,11 @@ namespace Kiln
 
         public string GetPurchaseToken()
         {
-#if ANDROID_DEVICE
+#if !UNITY_EDITOR
             return javaInst.Call<string>("getPurchaseToken");
-#endif
+#else
             return _purchaseToken;
+#endif
         }    
 
         public string GetSignedRequest()
@@ -259,10 +281,11 @@ namespace Kiln
 
         new public string ToString()
         {
-#if ANDROID_DEVICE
+#if !UNITY_EDITOR
             return javaInst.Call<string>("toString");
-#endif
+#else
             return $"-----\nProduct ID: {_productID}\nPurchase Token: {_purchaseToken}\nDeveloper Payload: {_developerPayload}\n";
+#endif
         }    
 
     }

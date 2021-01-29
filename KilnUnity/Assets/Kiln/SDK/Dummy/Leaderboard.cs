@@ -1,9 +1,9 @@
 ﻿#if UNITY_EDITOR
-
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using System.Linq;
+using static Kiln.Settings;
 
 namespace Kiln
 {
@@ -26,12 +26,7 @@ namespace Kiln
             }
         }
 
-        [System.Serializable]
-        public enum LeaderboardType
-        {
-            HIGH_TO_LOW,
-            LOW_TO_HIGH
-        }
+        
 
         [SerializeField] private string _id;
         private Dictionary<string, double> _data = new Dictionary<string, double>();
@@ -299,5 +294,4 @@ namespace Kiln
         #endregion
     }
 }
-
 #endif

@@ -26,16 +26,14 @@ MonoBehaviour:
     Type: 0
     MetaData: 
   _ads:
-  - Id: dd
-    Type: 0
-  - Id: ss
+  - Id: Interstitial 1
     Type: 1
-  - Id: chacha
-    Type: 0
-  - Id: sss
-    Type: 0
-  - Id: dsadsad
+  - Id: Interstitial 2
     Type: 1
+  - Id: Rewarded 1
+    Type: 0
+  - Id: Rewarded 2
+    Type: 0
   _leaderboards:
   - Id: leaderboard
     Type: 0

@@ -1,4 +1,4 @@
-﻿#if UNITY_EDITOR
+﻿#if UNITY_ANDROID
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,6 +9,13 @@ namespace Kiln
         public enum AdType
         {
             REWARDED_VIDEO, INTERSTITIAL
+        }
+
+        [System.Serializable]
+        public enum LeaderboardType
+        {
+            HIGH_TO_LOW,
+            LOW_TO_HIGH
         }
 
         [System.Serializable]
@@ -31,7 +38,7 @@ namespace Kiln
         public struct Leaderboard
         {
             public string Id;
-            public Kiln.Leaderboard.LeaderboardType Type;
+            public LeaderboardType Type;
         }
 
 
