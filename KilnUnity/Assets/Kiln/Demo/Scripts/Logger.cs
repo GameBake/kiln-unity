@@ -1,5 +1,6 @@
 ﻿
 using System;
+using System.Diagnostics;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -8,7 +9,7 @@ namespace Kiln
     public static class Logger {
 
 #if !UNITY_EDITOR        
-        // [Conditional("DEVELOPMENT_BUILD")]
+        [Conditional("DEVELOPMENT_BUILD")]
 #endif
         public static void Log(string logMsg, LogType logType = LogType.Log, Object obj = null)
         {
@@ -33,7 +34,7 @@ namespace Kiln
         }
 
 #if !UNITY_EDITOR        
-        // [Conditional("DEVELOPMENT_BUILD")]
+        [Conditional("DEVELOPMENT_BUILD")]
 #endif
         public static void Log(Exception exception, Object obj = null)
         {
