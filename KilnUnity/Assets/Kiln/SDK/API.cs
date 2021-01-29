@@ -111,7 +111,7 @@ namespace Kiln
         {
 #if ANDROID_DEVICE
             return Bridge.Init();
-#endif
+#else
             var aTcs = new TaskCompletionSource<object>();
 
             _initialized = true;
@@ -150,9 +150,28 @@ namespace Kiln
             aTcs.SetResult(0);
 
             return aTcs.Task;
+#endif
         }
 
         /// <summary>
+<<<<<<< HEAD
+=======
+        /// method <c>platformAvailable</c> to check platform for a custom setting/configuration/option.
+        /// </summary>
+        /// <returns>the platform available</returns>
+        public static Platform PlatformAvailable()
+        {
+#if ANDROID_DEVICE
+            return Bridge.PlatformAvailable();
+#else
+            CheckInitialized();
+
+            return Platform.Development;
+#endif
+        }
+
+        /// <summary>
+>>>>>>> 39c31ec75b7ce3dfdb7c0bf976f867f043f7f4a4
         /// Use this to check if the underlying platform supports interstitial ads
         /// </summary>
         /// <returns>boolean true if it's supported, false otherwise</returns>
@@ -160,10 +179,11 @@ namespace Kiln
         {
 #if ANDROID_DEVICE
             return Bridge.SupportsInterstitialAds();
-#endif
+#else
             CheckInitialized();
 
             return Settings.SupportsInterstitialAds;
+#endif
         }
 
         /// <summary>
@@ -177,7 +197,7 @@ namespace Kiln
         {
 #if ANDROID_DEVICE
             return Bridge.LoadInterstitialAd(identifier);
-#endif
+#else
             CheckInitialized();
 
             if (!SupportsInterstitialAds())
@@ -203,6 +223,7 @@ namespace Kiln
             // aTcs.SetResult(null);
 
             return aTcs.Task;
+#endif
         }
 
         /// <summary>
@@ -216,7 +237,7 @@ namespace Kiln
         {
 #if ANDROID_DEVICE
             return Bridge.ShowInterstitialAd(identifier);
-#endif
+#else
             CheckInitialized();
 
             if (!SupportsInterstitialAds())
@@ -243,6 +264,7 @@ namespace Kiln
             }
 
             return aTcs.Task;
+#endif
         }
 
         /// <summary>
@@ -253,10 +275,11 @@ namespace Kiln
         {
 #if ANDROID_DEVICE
             return Bridge.SupportsRewardedAds();
-#endif
+#else
             CheckInitialized();
 
             return Settings.SupportsRewardedAds;
+#endif
         }
 
         /// <summary>
@@ -270,7 +293,7 @@ namespace Kiln
         {
 #if ANDROID_DEVICE
             return Bridge.LoadRewardedAd(identifier);
-#endif
+#else
             CheckInitialized();
 
             if (!SupportsRewardedAds())
@@ -296,6 +319,7 @@ namespace Kiln
             aTcs.SetResult(null);
 
             return aTcs.Task;
+#endif
         }
 
         /// <summary>
@@ -309,7 +333,7 @@ namespace Kiln
         {
 #if ANDROID_DEVICE
             return Bridge.ShowRewardedAd(identifier);
-#endif
+#else
             CheckInitialized();
 
             if (!SupportsRewardedAds())
@@ -336,6 +360,7 @@ namespace Kiln
             }
 
             return aTcs.Task;
+#endif
         }
 
         /// <summary>
@@ -346,10 +371,11 @@ namespace Kiln
         {
 #if ANDROID_DEVICE
             return Bridge.SupportsLeaderboards();
-#endif
+#else
             CheckInitialized();
 
             return Settings.SupportsLeaderboards;
+#endif
         }
 
         /// <summary>
@@ -364,7 +390,7 @@ namespace Kiln
 #if ANDROID_DEVICE
             // TODO: Need to pass the id as well ?
             return Bridge.SetUserScore(score, data);
-#endif            
+#else          
             CheckInitialized();
 
             if (!SupportsLeaderboards())
@@ -384,6 +410,7 @@ namespace Kiln
             aTcs.SetResult(null);
 
             return aTcs.Task;
+#endif
         }
 
         /// <summary>
@@ -396,7 +423,7 @@ namespace Kiln
         {
 #if ANDROID_DEVICE
             return Bridge.GetUserScore(id);
-#endif            
+#else
             CheckInitialized();
 
             if (!SupportsLeaderboards())
@@ -413,7 +440,8 @@ namespace Kiln
 
             aTcs.SetResult(_leaderboards[id].GetUserScore());
 
-            return aTcs.Task;        
+            return aTcs.Task;
+#endif
         }
 
         /// <summary>
@@ -428,7 +456,7 @@ namespace Kiln
         {
 #if ANDROID_DEVICE
             return Bridge.GetScores(count, offset, id);
-#endif            
+#else
             CheckInitialized();
 
             if (!SupportsLeaderboards())
@@ -446,6 +474,7 @@ namespace Kiln
             aTcs.SetResult(_leaderboards[id].GetScores(count, offset));
 
             return aTcs.Task;
+#endif
         }
 
         /// <summary>
@@ -456,10 +485,11 @@ namespace Kiln
         {
 #if ANDROID_DEVICE
             return Bridge.SupportsPlatformLeaderboardUI();
-#endif
+#else
             CheckInitialized();
 
             return Settings.SupportsIAP;
+#endif
         }
 
         /// <summary>
@@ -470,7 +500,7 @@ namespace Kiln
         {
 #if ANDROID_DEVICE
             return Bridge.ShowPlatformLeaderboardUI();
-#endif
+#else
             CheckInitialized();
 
             if (!SupportsPlatformLeaderboardUI())
@@ -485,6 +515,7 @@ namespace Kiln
             // aTcs.SetResult(null);
 
             return aTcs.Task;
+#endif
         }
 
         /// <summary>
@@ -495,10 +526,11 @@ namespace Kiln
         {
 #if ANDROID_DEVICE
             return Bridge.SupportsIAP();
-#endif
+#else
             CheckInitialized();
 
             return Settings.SupportsIAP;
+#endif
         }
 
         /// <summary>
@@ -510,7 +542,7 @@ namespace Kiln
         {
 #if ANDROID_DEVICE
             return Bridge.GetAvailableProducts();
-#endif
+#else
             CheckInitialized();
 
             if (!SupportsIAP())
@@ -523,6 +555,7 @@ namespace Kiln
             aTcs.SetResult(_iap.Products);
 
             return aTcs.Task;
+#endif
         }
 
         /// <summary>
@@ -559,7 +592,7 @@ namespace Kiln
         {
 #if ANDROID_DEVICE
             return Bridge.GetPurchasedProducts();
-#endif
+#else
             CheckInitialized();
 
             if (!SupportsIAP())
@@ -572,6 +605,7 @@ namespace Kiln
             aTcs.SetResult(_iap.Purchases);
 
             return aTcs.Task;
+#endif
         }
 
         /// <summary>
@@ -585,7 +619,7 @@ namespace Kiln
         {
 #if ANDROID_DEVICE
             return Bridge.PurchaseProduct(productID, payload);
-#endif
+#else
             CheckInitialized();
 
             if (!SupportsIAP())
@@ -596,6 +630,7 @@ namespace Kiln
             var task = _iap.PurchaseProduct(productID, payload);
 
             return task;
+#endif
         }
 
         /// <summary>
@@ -608,7 +643,7 @@ namespace Kiln
         {
 #if ANDROID_DEVICE
             return Bridge.ConsumePurchasedProduct(purchaseToken);
-#endif
+#else
             CheckInitialized();
 
             if (!SupportsIAP())
@@ -623,6 +658,7 @@ namespace Kiln
             aTcs.SetResult(null);
 
             return aTcs.Task;
+#endif
         }
 
         /// <summary>
@@ -632,9 +668,10 @@ namespace Kiln
         public static void SubmitAnalyticsEvent(AnalyticEvent evt)
         {
 #if ANDROID_DEVICE
-            return Bridge.SubmitAnalyticsEvent(evt);
-#endif
+            Bridge.SubmitAnalyticsEvent(evt);
+#else
             CheckInitialized();
+#endif
         }
 
     }

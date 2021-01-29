@@ -292,8 +292,8 @@ namespace Kiln
             }
             
             Rect typeRect = new Rect(rect.x + idRect.width + 30, rect.y + itemInputYOffset, rect.width * 0.3f - 30, EditorGUIUtility.singleLineHeight);
-            Kiln.Leaderboard.LeaderboardType type = leaderboard.Type;
-            Kiln.Leaderboard.LeaderboardType newType = (Kiln.Leaderboard.LeaderboardType)EditorGUI.EnumPopup(typeRect, leaderboard.Type);
+            Kiln.Settings.LeaderboardType type = leaderboard.Type;
+            Kiln.Settings.LeaderboardType newType = (Kiln.Settings.LeaderboardType)EditorGUI.EnumPopup(typeRect, leaderboard.Type);
 
             if (newType != leaderboard.Type)
             {
