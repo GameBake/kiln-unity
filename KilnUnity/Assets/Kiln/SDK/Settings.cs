@@ -48,6 +48,8 @@ namespace Kiln
         public List<Ad> ADs { get { return _ads; } }
         [SerializeField] private List<Leaderboard> _leaderboards = new List<Leaderboard>();
         public List<Leaderboard> Leaderboards { get { return _leaderboards; } }
+        [SerializeField] private List<string> _analyticsEvents = new List<string>();
+        public List<string> AnalyticsEvents { get { return _analyticsEvents; } }
         [SerializeField] private bool _supportsInterstitialAds = true;
         public bool SupportsInterstitialAds
         {
@@ -105,7 +107,7 @@ namespace Kiln
         /// <param name="id"></param>
         /// <param name="adType"></param>
         /// <returns></returns>
-        private bool ValidPlacementId(string id, AdType adType)
+        private bool IsValidPlacementId(string id, AdType adType)
         {
             return GetPlacementIds(adType).Contains(id);
         }
@@ -135,9 +137,9 @@ namespace Kiln
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public bool ValidInterstitialId(string id)
+        public bool IsValidInterstitialId(string id)
         {
-            return ValidPlacementId(id, AdType.INTERSTITIAL);
+            return IsValidPlacementId(id, AdType.INTERSTITIAL);
         }
 
         /// <summary>
@@ -145,9 +147,9 @@ namespace Kiln
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public bool ValidRewardedId(string id)
+        public bool IsValidRewardedId(string id)
         {
-            return ValidPlacementId(id, AdType.REWARDED_VIDEO);
+            return IsValidPlacementId(id, AdType.REWARDED_VIDEO);
         }
 
         /// <summary>
