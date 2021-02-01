@@ -203,7 +203,7 @@ namespace Kiln
                 throw new Kiln.Exception($"Interstitial Ads not supported.");
             }
 
-            if (!Settings.ValidInterstitialId(identifier))
+            if (!Settings.IsValidInterstitialId(identifier))
             {
                 throw new Kiln.Exception($"Invalid Interstitial Placement ID: {identifier}");
             }
@@ -243,7 +243,7 @@ namespace Kiln
                 throw new Kiln.Exception($"Interstitial Ads not supported.");
             }
 
-            if (!Settings.ValidInterstitialId(identifier))
+            if (!Settings.IsValidInterstitialId(identifier))
             {
                 throw new Kiln.Exception($"Invalid Interstitial Placement ID: {identifier}");
             }
@@ -299,7 +299,7 @@ namespace Kiln
                 throw new Kiln.Exception($"Rewarded Ads not supported.");
             }
             
-            if (!Settings.ValidRewardedId(identifier))
+            if (!Settings.IsValidRewardedId(identifier))
             {
                 throw new Kiln.Exception($"Invalid Rewarded Placement ID: {identifier}");
             }
@@ -339,7 +339,7 @@ namespace Kiln
                 throw new Kiln.Exception($"Rewarded Ads not supported.");
             }
 
-            if (!Settings.ValidRewardedId(identifier))
+            if (!Settings.IsValidRewardedId(identifier))
             {
                 throw new Kiln.Exception($"Invalid Rewarded Placement ID: {identifier}");
             }
