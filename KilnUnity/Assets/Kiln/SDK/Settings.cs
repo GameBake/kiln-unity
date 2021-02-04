@@ -1,5 +1,4 @@
-﻿#if UNITY_ANDROID
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 namespace Kiln
@@ -23,7 +22,7 @@ namespace Kiln
         {
             public string Id;
             public float Price;
-            public Product.ProductType Type;
+            public ProductType Type;
             public string MetaData;
         }
 
@@ -172,4 +171,3 @@ namespace Kiln
     
     }
 }
-#endif

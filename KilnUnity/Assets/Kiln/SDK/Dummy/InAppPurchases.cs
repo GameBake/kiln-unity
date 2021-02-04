@@ -54,12 +54,12 @@ namespace Kiln
             public PendingPurchase[] NonConsumed;
         }
 
-        private List<Product> _products = new List<Product>();
-        public List<Product> Products { get { return _products; } }
+        private List<IProduct> _products = new List<IProduct>();
+        public List<IProduct> Products { get { return _products; } }
         private List<Product> _ownedProducts = new List<Product>();
-        private List<Purchase> _purchases = new List<Purchase>();
-        public List<Purchase> Purchases { get { return _purchases; } }
-        private List<Purchase> _nonConsumedPurchases = new List<Purchase>();
+        private List<IPurchase> _purchases = new List<IPurchase>();
+        public List<IPurchase> Purchases { get { return _purchases; } }
+        private List<IPurchase> _nonConsumedPurchases = new List<IPurchase>();
         [SerializeField] private IAPState _state;
 
         public InAppPurchases()
@@ -170,7 +170,7 @@ namespace Kiln
         /// 
         /// </summary>
         /// <param name="p"></param>
-        private void ProcessCompletedPurchase(Purchase p)
+        private void ProcessCompletedPurchase(IPurchase p)
         {
             _nonConsumedPurchases.Add(p);
             _purchases.Add(p);
@@ -233,15 +233,15 @@ namespace Kiln
         /// <param name="productID"></param>
         /// <param name="payload"></param>
         /// <returns></returns>
-        public Task<Purchase> PurchaseProduct(string productID, string payload)
+        public Task<IPurchase> PurchaseProduct(string productID, string payload)
         {
             Product p = GetProduct(productID);
 
-            var aTcs = new TaskCompletionSource<Purchase>();
+            var aTcs = new TaskCompletionSource<IPurchase>();
 
             // If it's a non consumable, we'll check if it's already owned
             bool showPurchaseWindow = true;
-            if (p.GetProductType() == Product.ProductType.NON_CONSUMABLE)
+            if (p.GetProductType() == ProductType.NON_CONSUMABLE)
             {
                 foreach (Purchase aux in _purchases)
                 {
@@ -259,9 +259,9 @@ namespace Kiln
                 IAPController controller = MonoBehaviour.Instantiate(IAPPrefab);
                 controller.Show(aTcs, productID, p.GetPrice(), payload);
 
-                System.Action<Task<Purchase>> purchaseTracker = async (Task<Purchase> t) =>
+                System.Action<Task<IPurchase>> purchaseTracker = async (Task<IPurchase> t) =>
                 {
-                    Purchase purchase = await t;
+                    IPurchase purchase = await t;
                     ProcessCompletedPurchase(purchase);
                 };
 

@@ -245,8 +245,8 @@ namespace Kiln
             }
             
             Rect typeRect = new Rect(rect.x + idRect.width + 30f, rect.y + itemInputYOffset, rect.width * 0.3f - 30f, EditorGUIUtility.singleLineHeight);
-            Product.ProductType type = iap.Type;
-            Product.ProductType newType = (Product.ProductType)EditorGUI.EnumPopup(typeRect, iap.Type);
+            ProductType type = iap.Type;
+            ProductType newType = (ProductType)EditorGUI.EnumPopup(typeRect, iap.Type);
 
             if (newType != iap.Type)
             {

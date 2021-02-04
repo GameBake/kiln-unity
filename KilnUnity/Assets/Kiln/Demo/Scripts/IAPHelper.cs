@@ -63,14 +63,14 @@ namespace Kiln
             public PendingPurchase[] NonConsumed;
         }
 
-        private List<Product> _products = new List<Product>();
-        public List<Product> Products
+        private List<IProduct> _products = new List<IProduct>();
+        public List<IProduct> Products
         {
             get { return _products; }
             set { _products = value; }
         }
-        private List<Purchase> _nonConsumedPurchases = new List<Purchase>();
-        public List<Purchase> NonConsumedPurchases { get { return _nonConsumedPurchases; } }
+        private List<IPurchase> _nonConsumedPurchases = new List<IPurchase>();
+        public List<IPurchase> NonConsumedPurchases { get { return _nonConsumedPurchases; } }
         [SerializeField] private IAPState _state;
 
         public IAPHelper()

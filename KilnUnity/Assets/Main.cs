@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿#if UNITY_ANDROID
+using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -97,3 +98,4 @@ public class Main : MonoBehaviour
         return;
     }
 }
+#endif
