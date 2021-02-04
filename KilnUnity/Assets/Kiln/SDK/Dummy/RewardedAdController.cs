@@ -8,13 +8,13 @@ namespace Kiln
     public class RewardedAdController : MonoBehaviour
     {
         [SerializeField] private Text _placementID;
-        private TaskCompletionSource<RewardedAdResponse> _tcs;
+        private TaskCompletionSource<IRewardedAdResponse> _tcs;
 
         /// <summary>
         /// The prefab is disabled by default, display it
         /// </summary>
         /// <param name="task">Task Completion Source to communicate once interstitial's done showing</param>
-        public void Show(TaskCompletionSource<RewardedAdResponse> tcs, string placementId)
+        public void Show(TaskCompletionSource<IRewardedAdResponse> tcs, string placementId)
         {
             _tcs = tcs;
             _placementID.text = placementId;

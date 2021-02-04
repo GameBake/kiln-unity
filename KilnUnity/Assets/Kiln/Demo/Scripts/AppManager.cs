@@ -227,7 +227,7 @@ namespace Kiln
                 string placementId = await _idSelector.SelectID(Kiln.API.Settings.GetRewardedIds());
                 _idSelector.Close();
 
-                RewardedAdResponse response = await Kiln.API.ShowRewardedAd(placementId);
+                IRewardedAdResponse response = await Kiln.API.ShowRewardedAd(placementId);
                 
                 Logger.Log($"Rewarded Ad Displayed. With reward: {response.getWithReward()}");
             }
@@ -271,7 +271,7 @@ namespace Kiln
                 string leaderboardID = await _idSelector.SelectID(Kiln.API.Settings.GetLeaderboardIds());
                 _idSelector.Close();
 
-                LeaderboardEntry entry = await Kiln.API.GetUserScore(leaderboardID);
+                ILeaderboardEntry entry = await Kiln.API.GetUserScore(leaderboardID);
 
                 Logger.Log(entry.ToString());
             }
@@ -323,7 +323,7 @@ namespace Kiln
                 string leaderboardID = await _idSelector.SelectID(Kiln.API.Settings.GetLeaderboardIds());
                 _idSelector.Close();
                 
-                List<LeaderboardEntry> entries = await Kiln.API.GetScores(_getScoresAmount, _getScoresOffset, leaderboardID);
+                List<ILeaderboardEntry> entries = await Kiln.API.GetScores(_getScoresAmount, _getScoresOffset, leaderboardID);
 
                 foreach (LeaderboardEntry entry in entries)
                 {
@@ -367,7 +367,7 @@ namespace Kiln
         {
             try
             {
-                List<Product> products = await Kiln.API.GetAvailableProducts();
+                List<IProduct> products = await Kiln.API.GetAvailableProducts();
 
                 foreach (Product p in products)
                 {
@@ -393,9 +393,9 @@ namespace Kiln
         {
             try
             {
-                List<Purchase> purchases = await Kiln.API.GetPurchasedProducts();
+                List<IPurchase> purchases = await Kiln.API.GetPurchasedProducts();
 
-                foreach (Purchase p in purchases)
+                foreach (IPurchase p in purchases)
                 {
                     Logger.Log(p.ToString());
                 }
@@ -422,7 +422,7 @@ namespace Kiln
                 string productID = await _idSelector.SelectID(IAPHelper.Instance.GetProductIDs());
                 _idSelector.Close();
 
-                Purchase purchase = await Kiln.API.PurchaseProduct(productID, "DEVELOPER PAYLOAD TEST");
+                IPurchase purchase = await Kiln.API.PurchaseProduct(productID, "DEVELOPER PAYLOAD TEST");
 
 #if !UNITY_EDITOR && UNITY_ANDROID
                 IAPHelper.Instance.NonConsumedPurchases.Add(purchase);

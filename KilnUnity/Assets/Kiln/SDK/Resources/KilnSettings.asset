@@ -39,6 +39,11 @@ MonoBehaviour:
     Type: 0
   - Id: leaderboard2
     Type: 0
+  _analyticsEvents:
+  - ID1
+  - ID2
+  - ID3
+  - ID4
   _supportsInterstitialAds: 1
   _supportsRewardedAds: 1
   _supportsLeaderboards: 1

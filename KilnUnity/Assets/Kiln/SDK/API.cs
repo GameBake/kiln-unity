@@ -327,10 +327,10 @@ namespace Kiln
         /// </summary>
         /// <param name="identifier">the ad identifier</param>
         /// <returns>Task</returns>
-        public static Task<RewardedAdResponse> ShowRewardedAd(string identifier)
+        public static Task<IRewardedAdResponse> ShowRewardedAd(string identifier)
         {
 #if ANDROID_DEVICE
-            return Bridge.ShowRewardedAd(identifier);
+            return Bridge.ShowRewardedAd(identifier); 
 #else
             CheckInitialized();
 
@@ -344,7 +344,7 @@ namespace Kiln
                 throw new Kiln.Exception($"Invalid Rewarded Placement ID: {identifier}");
             }
 
-            var aTcs = new TaskCompletionSource<RewardedAdResponse>();
+            var aTcs = new TaskCompletionSource<IRewardedAdResponse>();
 
             if (_rewardedAds[identifier] == null)
             {
@@ -417,7 +417,7 @@ namespace Kiln
         /// </summary>
         /// <param name="id">the user identifier</param>
         /// <returns>Task</returns>
-        public static Task<LeaderboardEntry> GetUserScore(string id)
+        public static Task<ILeaderboardEntry> GetUserScore(string id)
         {
 #if ANDROID_DEVICE
             return Bridge.GetUserScore(id);
@@ -434,7 +434,7 @@ namespace Kiln
                 throw new Kiln.Exception($"There's no Leaderboards with id {id}.");
             }
 
-            var aTcs = new TaskCompletionSource<LeaderboardEntry>();
+            var aTcs = new TaskCompletionSource<ILeaderboardEntry>();
 
             aTcs.SetResult(_leaderboards[id].GetUserScore());
 
@@ -450,7 +450,7 @@ namespace Kiln
         /// <param name="offset">The offset from the top of the leaderboard that entries will be fetched from. default 0 if not specified</param>
         /// <param name="id">the leaderboard identifier</param>
         /// <returns></returns>
-        public static Task<List<LeaderboardEntry>> GetScores(int count, int offset, string id)
+        public static Task<List<ILeaderboardEntry>> GetScores(int count, int offset, string id)
         {
 #if ANDROID_DEVICE
             return Bridge.GetScores(count, offset, id);
@@ -467,7 +467,7 @@ namespace Kiln
                 throw new Kiln.Exception($"There's no Leaderboards with id {id}.");
             }
 
-            var aTcs = new TaskCompletionSource<List<LeaderboardEntry>>();
+            var aTcs = new TaskCompletionSource<List<ILeaderboardEntry>>();
             
             aTcs.SetResult(_leaderboards[id].GetScores(count, offset));
 
@@ -536,7 +536,7 @@ namespace Kiln
         /// purchases the Task will get an exception <c>KilnException</c>
         /// </summary>
         /// <returns>Task</returns>
-        public static Task<List<Product>> GetAvailableProducts()
+        public static Task<List<IProduct>> GetAvailableProducts()
         {
 #if ANDROID_DEVICE
             return Bridge.GetAvailableProducts();
@@ -548,7 +548,7 @@ namespace Kiln
                 throw new Kiln.Exception("In App Purchases not supported.");
             }
 
-            var aTcs = new TaskCompletionSource<List<Product>>();
+            var aTcs = new TaskCompletionSource<List<IProduct>>();
 
             aTcs.SetResult(_iap.Products);
 
@@ -562,7 +562,7 @@ namespace Kiln
         /// </summary>
         /// <param name="ids">List of identifiers to retrieve desired products</param>
         /// <returns></returns>
-        public Task<List<Product>> GetAvailableProducts(List<string> ids) 
+        public Task<List<IProduct>> GetAvailableProducts(List<string> ids) 
         {
 #if ANDROID_DEVICE
             return Bridge.GetAvailableProducts(ids);
@@ -574,7 +574,7 @@ namespace Kiln
                 throw new Kiln.Exception("In App Purchases not supported.");
             }
 
-            var aTcs = new TaskCompletionSource<List<Product>>();
+            var aTcs = new TaskCompletionSource<List<IProduct>>();
 
             aTcs.SetResult(_iap.Products);
 
@@ -587,7 +587,7 @@ namespace Kiln
         /// purchases the Task will get an exception <c>KilnException</c>
         /// </summary>
         /// <returns>Task</returns>
-        public static Task<List<Purchase>> GetPurchasedProducts()
+        public static Task<List<IPurchase>> GetPurchasedProducts()
         {
 #if ANDROID_DEVICE
             return Bridge.GetPurchasedProducts();
@@ -599,7 +599,7 @@ namespace Kiln
                 throw new Kiln.Exception("In App Purchases not supported.");
             }
 
-            var aTcs = new TaskCompletionSource<List<Purchase>>();
+            var aTcs = new TaskCompletionSource<List<IPurchase>>();
 
             aTcs.SetResult(_iap.Purchases);
 
@@ -614,7 +614,7 @@ namespace Kiln
         /// <param name="productID">id to refer the product to be purchased</param>
         /// <param name="payload">additional data to send with the purchase</param>
         /// <returns></returns>
-        public static Task<Purchase> PurchaseProduct(string productID, string payload)
+        public static Task<IPurchase> PurchaseProduct(string productID, string payload)
         {
 #if ANDROID_DEVICE
             return Bridge.PurchaseProduct(productID, payload);
@@ -664,7 +664,7 @@ namespace Kiln
         /// 
         /// </summary>
         /// <param name="evt"></param>
-        public static void SubmitAnalyticsEvent(AnalyticEvent evt)
+        public static void SubmitAnalyticsEvent(IAnalyticEvent evt)
         {
 #if ANDROID_DEVICE
             Bridge.SubmitAnalyticsEvent(evt);

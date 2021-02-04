@@ -227,7 +227,7 @@ namespace Kiln
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public LeaderboardEntry GetUserScore()
+        public ILeaderboardEntry GetUserScore()
         {
             if (!_data.ContainsKey(PLAYER_KEY))
             {
@@ -235,16 +235,10 @@ namespace Kiln
                 throw new Kiln.Exception($"User {PLAYER_KEY} not present in leaderboard.");
             }
 
-            LeaderboardEntry score = new LeaderboardEntry();
-
             var player = new Player();
             player.Name = PLAYER_KEY;
 
-            score.Score = _data[PLAYER_KEY];
-            score.Rank = GetRank(PLAYER_KEY);
-            score.Player = player;
-
-            return score;
+            return new LeaderboardEntry(_data[PLAYER_KEY], GetRank(PLAYER_KEY), player);
         }
 
         /// <summary>
@@ -253,9 +247,9 @@ namespace Kiln
         /// <param name="count"></param>
         /// <param name="offset"></param>
         /// <returns></returns>
-        public List<LeaderboardEntry> GetScores(int count, int offset)
+        public List<ILeaderboardEntry> GetScores(int count, int offset)
         {
-            List<LeaderboardEntry> scores = new List<LeaderboardEntry>();
+            List<ILeaderboardEntry> scores = new List<ILeaderboardEntry>();
 
             if (_data.Count > offset)
             {
@@ -279,11 +273,8 @@ namespace Kiln
                     var player = new Player();
                     player.Name = dataList[i].Key;
 
-                    LeaderboardEntry entry = new LeaderboardEntry();
-                    entry.Score = dataList[i].Value;
-                    entry.Rank = offset + i + 1;
-                    entry.Player = player;
-
+                    LeaderboardEntry entry = new LeaderboardEntry(dataList[i].Value, offset + i + 1, player);
+                    
                     scores.Add(entry);
                 }
             }

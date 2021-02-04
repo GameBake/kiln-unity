@@ -5,12 +5,12 @@ using UnityEngine;
 
 namespace Kiln
 {
-    public class Exception : System.Exception {
+    public class AndroidException : Exception {
         private static readonly string DefaultMessage = "Java Exception.";
 
-        public Exception() : base(DefaultMessage) { }
-        public Exception(string message) : base(message) { }
-        public Exception(string message, System.Exception innerException): base(message, innerException) { }    
+        public AndroidException() : base(DefaultMessage) { }
+        public AndroidException(string message) : base(message) { }
+        public AndroidException(string message, System.Exception innerException) : base(message, innerException) { }    
     }
 
     public enum AdType  {
@@ -38,115 +38,57 @@ namespace Kiln
         AndroidJavaObject JavaInst { set;  }
     }
 
-    public class RewardedAdResponse: IKilnObjectWrapper {
+    public class AndroidRewardedAdResponse : IKilnObjectWrapper, IRewardedAdResponse {
 
         private AndroidJavaObject javaInst;
 
         public AndroidJavaObject JavaInst { set => javaInst = value; }
-
-#if UNITY_EDITOR
-        private bool _rewardUser = false;
-        public bool RewardUser { set { _rewardUser = value; } }
-#endif
 
         public string getPlacementID() {
             return javaInst.Call<string>("getPlacementID");
         }
         public bool getWithReward()
         {
-#if !UNITY_EDITOR
             return javaInst.Call<bool>("getWithReward");
-#else       
-            return _rewardUser;
-#endif
         }
-
     }
 
-    public class Player: IKilnObjectWrapper
+    public class AndroidPlayer : IKilnObjectWrapper, IPlayer
     {
         private AndroidJavaObject javaInst;
         public AndroidJavaObject JavaInst { set => javaInst = value; }
 
-        // TODO: Check what we'll do with this pre processors. They're needed for testing
-        // on Android on dev mode, but they shouldn't be there for a release build as no 
-        // Player should me manually created
-// #if UNITY_EDITOR
-        private string _id;
-        public string ID { set { _id = value;  } }
-        private string _name;
-        public string Name { set { _name = value; } }
-        private string _photoURL;
-        public string PhotoURL { set { _photoURL = value; } }
-// #endif
-
         public string GetId()
         {
-#if !UNITY_EDITOR
             return javaInst.Call<string>("getId");
-#else
-            return _id;
-#endif
         }
         public string GetName()
         {
-#if !UNITY_EDITOR
             return javaInst.Call<string>("getName");
-#else
-            return _name;
-#endif
         }
         public string GetPhotoURL()
         {
-#if !UNITY_EDITOR
             return javaInst.Call<string>("getPhotoURL");
-#else
-            return _photoURL;
-#endif
         }
     }
 
-    public class LeaderboardEntry : IKilnObjectWrapper
+    public class AndroidLeaderboardEntry : IKilnObjectWrapper, ILeaderboardEntry
     {
         private AndroidJavaObject javaInst;
         public AndroidJavaObject JavaInst { set => javaInst = value; }
         
-        // TODO: Check what we'll do with this pre processors. They're needed for testing
-        // on Android on dev mode, but they shouldn't be there for a release build as no 
-        // LeaderboardEntry should me manually created
-// #if UNITY_EDITOR
-        private double _score;
-        public double Score { set { _score = value; } }
-        private int _rank;
-        public int Rank { set { _rank = value; } }
-        private Player _player;
-        public Player Player { set { _player = value; } }
-// #endif
-
         public double GetScore()
         {
-#if !UNITY_EDITOR
             return javaInst.Call<double>("getScore");
-#else
-            return _score;
-#endif
         }
         public int GetRank()
         {
-#if !UNITY_EDITOR
             return javaInst.Call<int>("getRank");
-#else
-            return _rank;
-#endif
         }
 
-        public Player GetPlayer()
+        public IPlayer GetPlayer()
         {
-#if !UNITY_EDITOR
-            return javaInst.Call<Player>("getPlayer");
-#else
-            return _player;
-#endif
+            return javaInst.Call<AndroidPlayer>("getPlayer");
         }
 
         new public string ToString()
@@ -156,27 +98,11 @@ namespace Kiln
 
     }
 
-    public class Product : IKilnObjectWrapper
+    public class AndroidProduct : IKilnObjectWrapper, IProduct
     {
-        
-        public enum ProductType
-        {
-            CONSUMABLE, NON_CONSUMABLE
-        }
-
         private AndroidJavaObject javaInst;
         public AndroidJavaObject JavaInst { set => javaInst = value; }
         
-#if UNITY_EDITOR
-        private string _id;
-        public string ID { set { _id = value; } }
-        private string _price;
-        public string Price { set { _price = value; } }
-        // TODO: This isn't supported on the Java side ?
-        private ProductType _type;
-        public ProductType Type { set { _type = value; } }
-#endif
-
         public string GetTitle()
         {
             return javaInst.Call<string>("getTitle");
@@ -184,11 +110,8 @@ namespace Kiln
 
         public string GetProductID()
         {
-#if !UNITY_EDITOR
-            return javaInst.Call<string>("getProductID");
-#else
-            return _id;
-#endif
+            // TODO: This has been added by me (Bruno), need to be sorted on the Java side
+            return javaInst.Call<string>("id");
         }
 
         public string GetDescription()
@@ -203,11 +126,7 @@ namespace Kiln
 
         public string GetPrice()
         {
-#if !UNITY_EDITOR
             return javaInst.Call<string>("getPrice");
-#else
-            return _price;
-#endif
         }
 
         public string GetPriceCurrencyCode()
@@ -217,49 +136,24 @@ namespace Kiln
 
         public ProductType GetProductType()
         {
-#if !UNITY_EDITOR
             // TODO: This was added by me (Bruno). Gotta see what's up on the other side.
             return javaInst.Call<ProductType>("getProductType");
-#else
-            return _type;
-#endif
         }
 
         new public string ToString()
         {
-#if !UNITY_EDITOR
             return javaInst.Call<string>("toString");
-#else
-            return $"-----\nID: {GetProductID()}\nPrice: {GetPrice()}\nType: {GetProductType()}\n";
-#endif
-        }    
-
+        }
     }
-    public class Purchase: IKilnObjectWrapper {
+    
+    public class AndroidPurchase : IKilnObjectWrapper, IPurchase {
 
         private AndroidJavaObject javaInst;
         public AndroidJavaObject JavaInst { set => javaInst = value; }
 
-        // TODO: Check what we'll do with this pre processors. They're needed for testing
-        // on Android on dev mode, but they shouldn't be there for a release build as no 
-        // Purchase should me manually created
-// #if UNITY_EDITOR
-        private string _productID;
-        public string ProductID { set { _productID = value; } }
-        private string _purchaseToken;
-        public string PurchaseToken { set { _purchaseToken = value; } }
-        private string _developerPayload;
-        public string DeveloperPayload { set { _developerPayload= value; } }
-// #endif
-
-
         public string GetDeveloperPayload()
         {
-#if !UNITY_EDITOR
             return javaInst.Call<string>("getDeveloperPayload");
-#else
-            return _developerPayload;
-#endif
         }    
         public string GetPaymentID()
         {
@@ -268,11 +162,7 @@ namespace Kiln
 
         public string GetProductID()
         {
-#if !UNITY_EDITOR
             return javaInst.Call<string>("getProductID");
-#else
-            return _productID;
-#endif
         }    
 
         public string GetPurchaseTime()
@@ -282,11 +172,7 @@ namespace Kiln
 
         public string GetPurchaseToken()
         {
-#if !UNITY_EDITOR
             return javaInst.Call<string>("getPurchaseToken");
-#else
-            return _purchaseToken;
-#endif
         }    
 
         public string GetSignedRequest()
@@ -296,16 +182,12 @@ namespace Kiln
 
         new public string ToString()
         {
-#if !UNITY_EDITOR
             return javaInst.Call<string>("toString");
-#else
-            return $"-----\nProduct ID: {_productID}\nPurchase Token: {_purchaseToken}\nDeveloper Payload: {_developerPayload}\n";
-#endif
         }    
 
     }
 
-    public class AnalyticEvent : AndroidJavaProxy 
+    public class AndroidAnalyticEvent : AndroidJavaProxy, IAnalyticEvent 
     {
         public string Category { get; set; }
 
@@ -315,7 +197,7 @@ namespace Kiln
 
         public string Value { get; set; }
 
-        public AnalyticEvent() : base("io.gamebake.kiln.types.AnalyticEvent") {}
+        public AndroidAnalyticEvent() : base("io.gamebake.kiln.types.AnalyticEvent") {}
         public string getCategory() {
             return Category;
         }
@@ -334,7 +216,7 @@ namespace Kiln
     public class Bridge {
         private AndroidJavaObject kiln;
 
-        class Callback<T>: AndroidJavaProxy {
+        class Callback<T> : AndroidJavaProxy {
 
             private TaskCompletionSource<T> taskCompletionSource;
 
@@ -360,7 +242,7 @@ namespace Kiln
                 }
             }
 
-            public Callback(): base("io.gamebake.kiln.Callback") {}
+            public Callback() : base("io.gamebake.kiln.Callback") {}
 
             public void onSuccess(object result) 
             {
@@ -377,12 +259,12 @@ namespace Kiln
             public void onFailure(AndroidJavaObject exception) 
             {
                 Debug.Log("KilnCallback onFailure");
-                taskCompletionSource.SetException(new Exception(exception.Call<string>("toString")));
+                taskCompletionSource.SetException(new AndroidException(exception.Call<string>("toString")));
             }
 
         }
 
-        class ListCallback<T>: Callback<List<T>> {
+        class ListCallback<T> : Callback<List<T>> {
 
             new public void onSuccess(object result) 
             {
@@ -403,9 +285,9 @@ namespace Kiln
 
         }
 
-        class PurchaseSettings: AndroidJavaProxy
+        class PurchaseSettings : AndroidJavaProxy
         {
-            public PurchaseSettings(): base("io.gamebake.kiln.types.PurchaseSettings") {}
+            public PurchaseSettings() : base("io.gamebake.kiln.types.PurchaseSettings") {}
 
             private string productID;
             private string developerPayload;
@@ -552,14 +434,14 @@ namespace Kiln
         /// </summary>
         /// <param name="identifier">the ad identifier</param>
         /// <returns>Task</returns>
-        public Task<RewardedAdResponse> ShowRewardedAd(string identifier) 
+        public Task<IRewardedAdResponse> ShowRewardedAd(string identifier) 
         {
-            var aTcs = new TaskCompletionSource<RewardedAdResponse>();
-            Callback<RewardedAdResponse> callback = new Callback<RewardedAdResponse>()
+            var aTcs = new TaskCompletionSource<IRewardedAdResponse>();
+            Callback<IRewardedAdResponse> callback = new Callback<IRewardedAdResponse>()
             {
                 Tcs = aTcs
             };
-            callback.Wrapper = new RewardedAdResponse();
+            callback.Wrapper = new AndroidRewardedAdResponse();
             kiln.Call("showRewardedAd", identifier, callback);
             return aTcs.Task;
         }
@@ -595,12 +477,12 @@ namespace Kiln
         /// </summary>
         /// <param name="id">the user identifier</param>
         /// <returns>Task</returns>
-        public Task<LeaderboardEntry> GetUserScore(string id)
+        public Task<ILeaderboardEntry> GetUserScore(string id)
         {
-            var aTcs = new TaskCompletionSource<LeaderboardEntry>();
-            kiln.Call("getUserScore", id, new Callback<LeaderboardEntry>() {
+            var aTcs = new TaskCompletionSource<ILeaderboardEntry>();
+            kiln.Call("getUserScore", id, new Callback<ILeaderboardEntry>() {
                 Tcs = aTcs,
-                Wrapper = new LeaderboardEntry()
+                Wrapper = new AndroidLeaderboardEntry()
             });
             return aTcs.Task;        
         }
@@ -613,12 +495,12 @@ namespace Kiln
         /// <param name="offset">The offset from the top of the leaderboard that entries will be fetched from. default 0 if not specified</param>
         /// <param name="id">the leaderboard identifier</param>
         /// <returns></returns>
-        public Task<List<LeaderboardEntry>> GetScores(int count, int offset, string id)
+        public Task<List<ILeaderboardEntry>> GetScores(int count, int offset, string id)
         {
-            var aTcs = new TaskCompletionSource<List<LeaderboardEntry>>();
-            kiln.Call("getScores",  count, offset, id, new ListCallback<LeaderboardEntry>() {
+            var aTcs = new TaskCompletionSource<List<ILeaderboardEntry>>();
+            kiln.Call("getScores",  count, offset, id, new ListCallback<ILeaderboardEntry>() {
                 Tcs = aTcs,
-                Wrapper = new LeaderboardEntry()
+                Wrapper = new AndroidLeaderboardEntry()
             });
             return aTcs.Task;
         }
@@ -661,11 +543,11 @@ namespace Kiln
         /// purchases the Task will get an exception <c>KilnException</c>
         /// </summary>
         /// <returns>Task</returns>
-        public Task<List<Product>> GetAvailableProducts() {
-            var aTcs = new TaskCompletionSource<List<Product>>();
-            kiln.Call("getAvailableProducts", new ListCallback<Product>() {
+        public Task<List<IProduct>> GetAvailableProducts() {
+            var aTcs = new TaskCompletionSource<List<IProduct>>();
+            kiln.Call("getAvailableProducts", new ListCallback<IProduct>() {
                 Tcs = aTcs,
-                Wrapper = new Product()
+                Wrapper = new AndroidProduct()
             });
             return aTcs.Task;
         }
@@ -676,8 +558,8 @@ namespace Kiln
         /// </summary>
         /// <param name="ids">List of identifiers to retrieve desired products</param>
         /// <returns></returns>
-        public Task<List<Product>> GetAvailableProducts(List<string> ids) {
-            var aTcs = new TaskCompletionSource<List<Product>>();
+        public Task<List<IProduct>> GetAvailableProducts(List<string> ids) {
+            var aTcs = new TaskCompletionSource<List<IProduct>>();
 
             AndroidJavaObject arrayList = new AndroidJavaObject("java.util.ArrayList");
 
@@ -686,9 +568,9 @@ namespace Kiln
                 arrayList.Call<bool>("add", new AndroidJavaObject("java.lang.String", item));
             }
 
-            kiln.Call("getAvailableProducts", arrayList, new ListCallback<Product>() {
+            kiln.Call("getAvailableProducts", arrayList, new ListCallback<IProduct>() {
                 Tcs = aTcs,
-                Wrapper = new Product()
+                Wrapper = new AndroidProduct()
             });
             return aTcs.Task;
         }
@@ -698,12 +580,12 @@ namespace Kiln
         /// purchases the Task will get an exception <c>KilnException</c>
         /// </summary>
         /// <returns>Task</returns>
-        public Task<List<Purchase>> GetPurchasedProducts()
+        public Task<List<IPurchase>> GetPurchasedProducts()
         {
-            var aTcs = new TaskCompletionSource<List<Purchase>>();
-            kiln.Call("getPurchasedProducts", new ListCallback<Purchase>() {
+            var aTcs = new TaskCompletionSource<List<IPurchase>>();
+            kiln.Call("getPurchasedProducts", new ListCallback<IPurchase>() {
                 Tcs = aTcs,
-                Wrapper = new Purchase()
+                Wrapper = new AndroidPurchase()
             });
             return aTcs.Task;
         }
@@ -715,16 +597,16 @@ namespace Kiln
         /// <param name="productID">id to refer the product to be purchased</param>
         /// <param name="payload">additional data to send with the purchase</param>
         /// <returns></returns>
-        public Task<Purchase> PurchaseProduct(string productID, string payload) 
+        public Task<IPurchase> PurchaseProduct(string productID, string payload) 
         {
-            var aTcs = new TaskCompletionSource<Purchase>();
+            var aTcs = new TaskCompletionSource<IPurchase>();
             PurchaseSettings settings = new PurchaseSettings() { 
                 ProductID = productID,
                 DeveloperPayload = payload
             };
-            kiln.Call("purchaseProduct", settings, new Callback<Purchase>() {
+            kiln.Call("purchaseProduct", settings, new Callback<IPurchase>() {
                 Tcs = aTcs,
-                Wrapper = new Purchase()
+                Wrapper = new AndroidPurchase()
             });
             return aTcs.Task;
         }
@@ -747,7 +629,7 @@ namespace Kiln
         /// <summary>
         /// </summary>
         /// <param name="evt"></param>
-        public void SubmitAnalyticsEvent(AnalyticEvent evt) 
+        public void SubmitAnalyticsEvent(IAnalyticEvent evt) 
         {
             kiln.Call("submitAnalyticsEvent", evt);
         }

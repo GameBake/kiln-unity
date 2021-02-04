@@ -9,7 +9,7 @@ namespace Kiln
         [SerializeField] private Text _idLabel;
         [SerializeField] private Text _priceLabel;
 
-        private TaskCompletionSource<Purchase> _tcs;
+        private TaskCompletionSource<IPurchase> _tcs;
 
         private string _productID;
         private string _developerPayload;
@@ -19,7 +19,7 @@ namespace Kiln
         /// The prefab is disabled by default, display it
         /// </summary>
         /// <param name="task">Task Completion Source to communicate once interstitial's done showing</param>
-        public void Show(TaskCompletionSource<Purchase> tcs, string productID, string price, string payload)
+        public void Show(TaskCompletionSource<IPurchase> tcs, string productID, string price, string payload)
         {
             _tcs = tcs;
 
