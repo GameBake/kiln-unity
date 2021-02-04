@@ -25,25 +25,6 @@ namespace Kiln
 
         private static string _storagePath = $"{Application.persistentDataPath}/KilnIAPHelperData.json";
 
-        private static IAPController _iapPrefab;
-        public static IAPController IAPPrefab
-        {
-            get
-            {
-                if (_iapPrefab == null)
-                {
-                    _iapPrefab = Resources.Load<IAPController>("KilnIAP");
-
-                    if (_iapPrefab == null)
-                    {
-                        throw new System.Exception("Kiln IAP Prefab Missing");
-                    }
-                }
-
-                return _iapPrefab;
-            }
-        }
-
         [System.Serializable]
         private class IAPState
         {

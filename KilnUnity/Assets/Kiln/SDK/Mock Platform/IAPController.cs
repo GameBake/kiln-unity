@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿#if UNITY_EDITOR
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -58,3 +59,4 @@ namespace Kiln
     }
 
 }
+#endif

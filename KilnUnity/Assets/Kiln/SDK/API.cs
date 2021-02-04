@@ -84,6 +84,25 @@ namespace Kiln
             }
         }
 
+        private static PlatformLeaderboardController _platformLeaderboardPrefab;
+        public static PlatformLeaderboardController PlatformLeaderboardPrefab
+        {
+            get
+            {
+                if (_platformLeaderboardPrefab == null)
+                {
+                    _platformLeaderboardPrefab = Resources.Load<PlatformLeaderboardController>("KilnPlatformLeaderboard");
+
+                    if (_platformLeaderboardPrefab == null)
+                    {
+                        throw new System.Exception("Kiln Platform Leaderboard Prefab Missing");
+                    }
+                }
+
+                return _platformLeaderboardPrefab;
+            }
+        }
+
         private static bool _initialized = false;
         private static Dictionary<string, RewardedAdController> _rewardedAds = new Dictionary<string, RewardedAdController>();
         private static Dictionary<string, InterstitialAdController> _interstitialAds = new Dictionary<string, InterstitialAdController>();
@@ -508,9 +527,8 @@ namespace Kiln
 
             var aTcs = new TaskCompletionSource<object>();
 
-            // TODO: Actually pop it in Editor
-
-            // aTcs.SetResult(null);
+            PlatformLeaderboardController leaderboards = GameObject.Instantiate(PlatformLeaderboardPrefab);
+            leaderboards.Show(aTcs);
 
             return aTcs.Task;
 #endif
