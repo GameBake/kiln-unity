@@ -341,6 +341,26 @@ namespace Kiln
             return;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        public async void OnPlatformLeaderboardsButton()
+        {
+            try
+            {
+                await Kiln.API.ShowPlatformLeaderboardUI();
+            }
+            catch (Kiln.Exception ex) 
+            {
+                Logger.Log(ex);
+            }
+            catch (System.Exception ex)
+            {
+                Logger.Log(ex.ToString());
+            }
+            return;
+        }
+
         #endregion
 
         #region In App Purchases
