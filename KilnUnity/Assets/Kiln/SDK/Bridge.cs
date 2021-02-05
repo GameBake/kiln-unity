@@ -629,8 +629,9 @@ namespace Kiln
         /// <summary>
         /// </summary>
         /// <param name="evt"></param>
-        public void SubmitAnalyticsEvent(IAnalyticEvent evt) 
+        public void SubmitAnalyticsEvent(string evt)
         {
+            // TODO: This is expecting an AnalyticsEvent on the other end of things... change !
             kiln.Call("submitAnalyticsEvent", evt);
         }
 

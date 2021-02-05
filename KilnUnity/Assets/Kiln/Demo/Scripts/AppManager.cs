@@ -509,14 +509,14 @@ namespace Kiln
         /// <summary>
         /// 
         /// </summary>
-        public void OnAnalyticsEventButton()
+        public async void OnAnalyticsEventButton()
         {
             try
             {
-                // TODO: Finish up implementation when we know what we'll be using
+                string eventID = await _idSelector.SelectID(Kiln.API.Settings.AnalyticsEvents);
+                _idSelector.Close();
 
-                // AnalyticEvent event = new AnalyticEvent();
-                // Kiln.API.SubmitAnalyticsEvent();
+                Kiln.API.SubmitAnalyticsEvent(eventID);
 
                 Logger.Log($"Analytics Event Fired.");
             }

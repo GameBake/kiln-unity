@@ -154,6 +154,16 @@ namespace Kiln
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public bool IsValidAnalyticsEventId(string id)
+        {
+            return AnalyticsEvents.Contains(id);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <returns></returns>
         public List<string> GetLeaderboardIds()
         {

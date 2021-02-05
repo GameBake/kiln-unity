@@ -682,12 +682,17 @@ namespace Kiln
         /// 
         /// </summary>
         /// <param name="evt"></param>
-        public static void SubmitAnalyticsEvent(IAnalyticEvent evt)
+        public static void SubmitAnalyticsEvent(string evt)
         {
 #if ANDROID_DEVICE
             Bridge.SubmitAnalyticsEvent(evt);
 #else
             CheckInitialized();
+
+            if (!Settings.IsValidAnalyticsEventId(evt))
+            {
+                throw new Kiln.Exception($"Invalid Analytics Event ID: {evt}");
+            }
 #endif
         }
 
