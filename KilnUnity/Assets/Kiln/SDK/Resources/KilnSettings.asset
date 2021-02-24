@@ -34,6 +34,10 @@ MonoBehaviour:
     Type: 0
   - Id: Rewarded 2
     Type: 0
+  - Id: Banner 1
+    Type: 2
+  - Id: Banner 2
+    Type: 2
   _leaderboards:
   - Id: leaderboard
     Type: 0
@@ -46,6 +50,7 @@ MonoBehaviour:
   - ID4
   _supportsInterstitialAds: 1
   _supportsRewardedAds: 1
+  _supportsBannerAds: 1
   _supportsLeaderboards: 1
   _supportsIAP: 1
   _supportsPlatformLeaderboardUI: 1

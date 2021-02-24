@@ -15,7 +15,8 @@ namespace Kiln
 
     public enum AdType  {
         INTERSTITIAL, 
-        REWARDED
+        REWARDED,
+        BANNER
     }
 
     public class DummyAd 
@@ -373,8 +374,8 @@ namespace Kiln
 
         /// <summary>
         /// It loads an interstitial ad. If the current platform doesn't support interstitial ads or there's a 
-        /// problem loading the Task will fail with an exception <c>KilnException</c> 
-        /// (you can check supportsInterstitialAds previously).
+        /// problem loading the Task will fail with an exception <see cref="Kiln.Exception"/>
+        /// (you can check <see cref="SupportsInterstitialAds"/> previously).
         /// </summary>
         /// <param name="identifier">the ad identifier</param>
         /// <returns>Task</returns>
@@ -389,8 +390,8 @@ namespace Kiln
 
         /// <summary>
         /// It shows the interstitial ad. If the platform doesn't support interstitial ads or there's any problem the 
-        /// Task will get an exception <c>KilnException</c> 
-        /// (check supportsInterstitialAds). Remember to call loadInterstitialAd previously.
+        /// Task will get an exception <see cref="Kiln.Exception"/>
+        /// (check <see cref="SupportsInterstitialAds"/>). Remember to call <see cref="LoadInterstitialAd"/> previously.
         /// </summary>
         /// <param name="identifier">the ad identifier</param>
         /// <returns>Task</returns>
@@ -413,8 +414,8 @@ namespace Kiln
 
         /// <summary>
         /// It loads a rewarded ad. If the current platform doesn't support rewarded ads or there's a 
-        /// problem loading the Task will fail with an exception <c>KilnException</c> 
-        /// (you can check supportsRewardedAds previously).
+        /// problem loading the Task will fail with an exception <see cref="Kiln.Exception"/>
+        /// (you can check <see cref="SupportsRewardedAds"/> previously).
         /// </summary>
         /// <param name="identifier">the ad identifier</param>
         /// <returns>Task</returns>
@@ -429,8 +430,8 @@ namespace Kiln
 
         /// <summary>
         /// It shows the rewarded ad. If the platform doesn't support rewarded ads or there's any problem the 
-        /// Task will get an exception <c>KilnException</c> 
-        /// (check supportsRewardedAds). Remember to call loadRewardedAd previously.
+        /// Task will get an exception <see cref="Kiln.Exception"/>
+        /// (check <see cref="SupportsRewardedAds"/>). Remember to call <see cref="LoadRewardedAd"/> previously.
         /// </summary>
         /// <param name="identifier">the ad identifier</param>
         /// <returns>Task</returns>
@@ -447,6 +448,88 @@ namespace Kiln
         }
 
         /// <summary>
+        /// Use this to check if the underlying platform supports banner ads
+        /// </summary>
+        /// <returns>boolean true if it's supported, false otherwise</returns>
+        public bool SupportsBannerAds() {
+            return kiln.Call<bool>("supportsBannerAds");
+        }
+
+        /// <summary>
+        /// It loads a banner ad. If the current platform doesn't support rewarded ads or there's a 
+        /// problem loading the Task will fail with an exception <see cref="Kiln.Exception"/>
+        /// (you can check <see cref="SupportsBannerAds"/> previously).
+        /// </summary>
+        /// <param name="identifier">the ad identifier</param>
+        /// <param name="position">Where in the screen to position the loaded ad. See <see cref="Kiln.BannerPosition"/></param>
+        /// <param name="maxSize">The maximum size of the banner to load. See <see cref="Kiln.BannerSize"/>.</param>
+        /// <returns>Task</returns>
+        public Task LoadBannerAd(string identifier, BannerPosition position, BannerSize maxSize = BannerSize.Width320Height50)
+        {
+            var width = maxSize.Width();
+            var height = maxSize.Height();
+            var aTcs = new TaskCompletionSource<object>();
+            kiln.Call("loadBannerAd", identifier, width, height, (int) position, new Callback<object>(){
+                Tcs = aTcs
+            });
+            return aTcs.Task;
+        }
+
+        /// <summary>
+        /// It shows the rewarded ad. If the platform doesn't support rewarded ads or there's any problem the 
+        /// Task will get an exception <see cref="Kiln.Exception"/>
+        /// (check <see cref="SupportsRewardedAds"/>). Remember to call <see cref="LoadRewardedAd"/> previously.
+        /// </summary>
+        /// <param name="identifier">the ad identifier</param>
+        /// <returns>Task</returns>
+        public Task ShowBannerAd(string identifier)
+        {
+            var aTcs = new TaskCompletionSource<object>();
+            Callback<object> callback = new Callback<object>()
+            {
+                Tcs = aTcs
+            };
+            kiln.Call("showBannerAd", identifier, callback);
+            return aTcs.Task;
+        }
+
+         /// <summary>
+        /// It hides the banner ad. If the platform doesn't support banner ads or there's any problem the 
+        /// Task will get an exception <see cref="Kiln.Exception"/>
+        /// (check <see cref="SupportsBannerAds"/>). Remember to call <see cref="LoadBannerAd"/> previously.
+        /// </summary>
+        /// <param name="identifier">the ad identifier</param>
+        /// <returns>Task</returns>
+        public Task HideBannerAd(string identifier)
+        {
+            var aTcs = new TaskCompletionSource<object>();
+            Callback<object> callback = new Callback<object>()
+            {
+                Tcs = aTcs
+            };
+            kiln.Call("hideBannerAd", identifier, callback);
+            return aTcs.Task;
+        }
+
+        /// <summary>
+        /// It destroys the banner ad. If the platform doesn't support banner ads or there's any problem the 
+        /// Task will get an exception <see cref="Kiln.Exception"/>
+        /// (check <see cref="SupportsBannerAds"/>). Remember to call <see cref="LoadBannerAd"/> previously.
+        /// </summary>
+        /// <param name="identifier">the ad identifier</param>
+        /// <returns>Task</returns>
+        public Task DestroyBannerAd(string identifier)
+        {
+            var aTcs = new TaskCompletionSource<object>();
+            Callback<object> callback = new Callback<object>()
+            {
+                Tcs = aTcs
+            };
+            kiln.Call("destroyBannerAd", identifier, callback);
+            return aTcs.Task;
+        }
+
+        /// <summary>
         /// Check If the current platform supports leaderboards
         /// </summary>
         /// <returns><c>true</c> if platform supports leaderboards, false otherwise</returns>
@@ -457,7 +540,7 @@ namespace Kiln
 
         /// <summary>
         /// It sets the user score. If the platform doesn't support leaderboards the Task  
-        /// will get an exception <c>KilnException</c>
+        /// will get an exception <see cref="Kiln.Exception"/>
         /// </summary>
         /// <param name="score">score to set</param>
         /// <param name="data">data optional. If the platform supports it, additional data to set.</param>
@@ -473,7 +556,7 @@ namespace Kiln
 
         /// <summary>
         /// It retrieves the user score. If the platform doesn't support leaderboards the Task  
-        /// will get an exception <c>KilnException</c>
+        /// will get an exception <see cref="Kiln.Exception"/>
         /// </summary>
         /// <param name="id">the user identifier</param>
         /// <returns>Task</returns>
@@ -489,7 +572,7 @@ namespace Kiln
 
         /// <summary>
         /// It gets leaderboard scores for all players. If the platform doesn't support leaderboards the Task  
-        /// will get an exception <c>KilnException</c>
+        /// will get an exception <see cref="Kiln.Exception"/>
         /// </summary>
         /// <param name="count">number of entries to retrieve. default to 10 if unspecified</param>
         /// <param name="offset">The offset from the top of the leaderboard that entries will be fetched from. default 0 if not specified</param>
@@ -515,7 +598,7 @@ namespace Kiln
         }
 
         /// <summary>
-        /// Shows native leaderboard ui if supported. Otherwise return Kiln.Exception
+        /// Shows native leaderboard ui if supported. Otherwise return <see cref="Kiln.Exception"/>
         /// </summary>
         /// <returns>Task</returns>
         public Task ShowPlatformLeaderboardUI() 
@@ -540,7 +623,7 @@ namespace Kiln
 
         /// <summary>
         /// Retrieves the list of available products to be purchased. If the platform doesn't support
-        /// purchases the Task will get an exception <c>KilnException</c>
+        /// purchases the Task will get an exception <see cref="Kiln.Exception"/>
         /// </summary>
         /// <returns>Task</returns>
         public Task<List<IProduct>> GetAvailableProducts() {
@@ -554,7 +637,7 @@ namespace Kiln
 
         /// <summary>
         /// Retrieves the list of available products to be purchased. If the platform doesn't support
-        /// purchases the Task will get an exception <c>KilnException</c>
+        /// purchases the Task will get an exception <see cref="Kiln.Exception"/>
         /// </summary>
         /// <param name="ids">List of identifiers to retrieve desired products</param>
         /// <returns></returns>
@@ -577,7 +660,7 @@ namespace Kiln
 
         /// <summary>
         /// It gets the list of products already purchased but still unconsumed. If the platform doesn't support 
-        /// purchases the Task will get an exception <c>KilnException</c>
+        /// purchases the Task will get an exception <see cref="Kiln.Exception"/>
         /// </summary>
         /// <returns>Task</returns>
         public Task<List<IPurchase>> GetPurchasedProducts()
@@ -592,7 +675,7 @@ namespace Kiln
 
         /// <summary>
         /// Purchase of a product. If the platform doesn't support purchases 
-        /// the Task will get an exception <c>KilnException</c>
+        /// the Task will get an exception <see cref="Kiln.Exception"/>
         /// </summary>
         /// <param name="productID">id to refer the product to be purchased</param>
         /// <param name="payload">additional data to send with the purchase</param>
@@ -613,7 +696,7 @@ namespace Kiln
 
         /// <summary>
         /// It consumes a product already purchased. If the platform doesn't support purchases 
-        /// the Task will get an exception <c>KilnException</c>
+        /// the Task will get an exception <see cref="Kiln.Exception">
         /// </summary>
         /// <param name="purchaseToken">the product token</param>
         /// <returns>Task</returns>

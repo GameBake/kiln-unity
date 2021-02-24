@@ -401,6 +401,13 @@ namespace Kiln
                 EditorUtility.SetDirty(_settings);
             }
 
+            bool supportsBannerAds = EditorGUILayout.Toggle("Supports Banner Ads", _settings.SupportsBannerAds);
+            if (supportsBannerAds != _settings.SupportsBannerAds)
+            {
+                _settings.SupportsBannerAds = supportsBannerAds;
+                EditorUtility.SetDirty(_settings);
+            }
+
             EditorGUILayout.EndVertical();
         }
 
@@ -409,7 +416,7 @@ namespace Kiln
             CheckInitialize();
 
             // TODO: Fix this. When entering play mode or exiting we're losing the _settings reference.
-            if(Application.isPlaying ||  _settings == null) return;
+            if(Application.isPlaying || _settings == null) return;
 
             DrawFeaturesSupport();
 
