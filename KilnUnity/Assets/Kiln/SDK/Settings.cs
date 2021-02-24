@@ -7,7 +7,7 @@ namespace Kiln
     {
         public enum AdType
         {
-            REWARDED_VIDEO, INTERSTITIAL
+            REWARDED_VIDEO, INTERSTITIAL, BANNER
         }
 
         [System.Serializable]
@@ -60,6 +60,12 @@ namespace Kiln
         {
             get { return _supportsRewardedAds; }
             set { _supportsRewardedAds = value; }
+        }
+        [SerializeField] private bool _supportsBannerAds = true;
+        public bool SupportsBannerAds
+        {
+            get { return _supportsBannerAds; }
+            set { _supportsBannerAds = value; }
         }
         [SerializeField] private bool _supportsLeaderboards = true;
         public bool SupportsLeaderboards
@@ -134,6 +140,15 @@ namespace Kiln
         /// <summary>
         /// 
         /// </summary>
+        /// <returns></returns>
+        public List<string> GetBannerIds()
+        {
+            return GetPlacementIds(AdType.BANNER);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
         public bool IsValidInterstitialId(string id)
@@ -149,6 +164,16 @@ namespace Kiln
         public bool IsValidRewardedId(string id)
         {
             return IsValidPlacementId(id, AdType.REWARDED_VIDEO);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public bool IsValidBannerId(string id)
+        {
+            return IsValidPlacementId(id, AdType.BANNER);
         }
 
         /// <summary>

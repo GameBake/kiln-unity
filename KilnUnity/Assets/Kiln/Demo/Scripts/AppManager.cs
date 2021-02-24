@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Kiln
@@ -230,6 +232,120 @@ namespace Kiln
                 IRewardedAdResponse response = await Kiln.API.ShowRewardedAd(placementId);
                 
                 Logger.Log($"Rewarded Ad Displayed. With reward: {response.getWithReward()}");
+            }
+            catch (Kiln.Exception ex) 
+            {
+                Logger.Log(ex);
+            }
+            catch (System.Exception ex)
+            {
+                Logger.Log(ex.ToString());
+            }
+            return;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public async void OnLoadBannerAdButton()
+        {
+            try
+            {
+                string placementId = await _idSelector.SelectID(Kiln.API.Settings.GetBannerIds());
+                _idSelector.Close();
+
+                // Now we need to display a placement list
+                string alignment = await _idSelector.SelectID(Enum.GetNames(typeof(BannerPosition)).ToList());
+                _idSelector.Close();
+                BannerPosition bannerPosition = (BannerPosition) Enum.Parse(typeof(BannerPosition), alignment, false);
+
+                // Finally we need a banner size
+                string size = await _idSelector.SelectID(Enum.GetNames(typeof(BannerSize)).ToList());
+                _idSelector.Close();
+                BannerSize bannerSize = (BannerSize) Enum.Parse(typeof(BannerSize), size, false);
+
+                await Kiln.API.LoadBannerAd(placementId, bannerPosition, bannerSize);
+                
+                Logger.Log("Banner Ad Loaded");
+            }
+            catch (Kiln.Exception ex) 
+            {
+                Logger.Log(ex);
+            }
+            catch (System.Exception ex)
+            {
+                Logger.Log(ex.ToString());
+            }
+            return;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public async void OnShowBannerAdButton()
+        {
+            try
+            {
+                string placementId = await _idSelector.SelectID(Kiln.API.Settings.GetBannerIds());
+                _idSelector.Close();
+
+                await Kiln.API.ShowBannerAd(placementId);
+                
+                Logger.Log("Banner Ad Displayed");
+            }
+            catch (Kiln.Exception ex) 
+            {
+                Logger.Log(ex);
+            }
+            catch (System.Exception ex)
+            {
+                Logger.Log(ex.ToString());
+            }
+            return;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public async void OnHideBannerAdButton()
+        {
+            try
+            {
+                string placementId = await _idSelector.SelectID(Kiln.API.Settings.GetBannerIds());
+                _idSelector.Close();
+
+                await Kiln.API.HideBannerAd(placementId);
+                
+                Logger.Log("Banner Ad Hidden");
+            }
+            catch (Kiln.Exception ex) 
+            {
+                Logger.Log(ex);
+            }
+            catch (System.Exception ex)
+            {
+                Logger.Log(ex.ToString());
+            }
+            return;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public async void OnDestroyBannerAdButton()
+        {
+            try
+            {
+                string placementId = await _idSelector.SelectID(Kiln.API.Settings.GetBannerIds());
+                _idSelector.Close();
+
+                await Kiln.API.DestroyBannerAd(placementId);
+                
+                Logger.Log("Banner Ad Destroyed");
             }
             catch (Kiln.Exception ex) 
             {
