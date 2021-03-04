@@ -49,13 +49,13 @@ namespace Kiln
             }
 
             public string[] Purchases;
-            public string[] Owned;
+            // public string[] Owned;
             public PendingPurchase[] NonConsumed;
         }
 
         private List<IProduct> _products = new List<IProduct>();
         public List<IProduct> Products { get { return _products; } }
-        private List<Product> _ownedProducts = new List<Product>();
+        // private List<Product> _ownedProducts = new List<Product>();
         private List<IPurchase> _purchases = new List<IPurchase>();
         public List<IPurchase> Purchases { get { return _purchases; } }
         private List<IPurchase> _nonConsumedPurchases = new List<IPurchase>();
@@ -94,13 +94,13 @@ namespace Kiln
                     _purchases.Add(p);
                 }
 
-                foreach (string productID in _state.Owned)
-                {
-                    Product p = new Product();
-                    p.ID = productID;
+                // foreach (string productID in _state.Owned)
+                // {
+                //     Product p = new Product();
+                //     p.ID = productID;
 
-                    _ownedProducts.Add(p);
-                }
+                //     _ownedProducts.Add(p);
+                // }
 
                 foreach (IAPState.PendingPurchase pending in _state.NonConsumed)
                 {
@@ -125,11 +125,11 @@ namespace Kiln
                 _state.Purchases[i] = _purchases[i].GetProductID();
             }
 
-            _state.Owned = new string[_ownedProducts.Count];
-            for (int i = 0; i < _ownedProducts.Count; i++)
-            {
-                _state.Owned[i] = _ownedProducts[i].GetProductID();
-            }
+            // _state.Owned = new string[_ownedProducts.Count];
+            // for (int i = 0; i < _ownedProducts.Count; i++)
+            // {
+            //     _state.Owned[i] = _ownedProducts[i].GetProductID();
+            // }
 
             _state.NonConsumed = new IAPState.PendingPurchase[_nonConsumedPurchases.Count];
             for (int i = 0; i < _nonConsumedPurchases.Count; i++)
@@ -171,7 +171,11 @@ namespace Kiln
         /// <param name="p"></param>
         private void ProcessCompletedPurchase(IPurchase p)
         {
-            _nonConsumedPurchases.Add(p);
+            if (GetProduct(p.GetProductID()).GetProductType() == ProductType.CONSUMABLE)
+            {
+                _nonConsumedPurchases.Add(p);
+            }
+            
             _purchases.Add(p);
 
             Save();
@@ -282,7 +286,7 @@ namespace Kiln
                 if (p.GetPurchaseToken() == purchaseToken)
                 {
                     _nonConsumedPurchases.Remove(p);
-                    _ownedProducts.Add(GetProduct(p.GetProductID()));
+                    // _ownedProducts.Add(GetProduct(p.GetProductID()));
 
                     done = true;
                     break;
