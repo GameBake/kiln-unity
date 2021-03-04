@@ -49,7 +49,17 @@ namespace Kiln
         /// <returns></returns>
         public static string GetPath(string id)
         {
-            return $"{Application.persistentDataPath}/KilnLeaderboard-{id}.json";
+            return $"{Application.persistentDataPath}/{GetFileName(id)}";
+        }
+
+        /// <summary>
+        /// Returns the name of the json file that'll be used to save the leaderboard status
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public static string GetFileName(string id)
+        {
+            return $"KilnLeaderboard-{id}.json";
         }
 
         /// <summary>

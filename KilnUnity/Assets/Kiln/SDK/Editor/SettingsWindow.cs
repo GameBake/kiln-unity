@@ -23,6 +23,8 @@ namespace Kiln
         {
             LoadOrCreateSettings();
 
+            Debug.Log(Application.persistentDataPath);
+
             GetWindow<SettingsWindow>(false, "Kiln Settings Editor", true);
         }
 

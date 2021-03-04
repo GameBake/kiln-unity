@@ -23,7 +23,10 @@ namespace Kiln
             }
         }
 
-        private static string _storagePath = $"{Application.persistentDataPath}/KilnIAPHelperData.json";
+        private static string _storageFileName = "KilnIAPData.json";
+        public static string StorageFileName { get { return _storageFileName; } }
+        private static string _storagePath = $"{Application.persistentDataPath}/{_storageFileName}";
+        public static string StoragePath { get { return _storagePath;  } }
 
         [System.Serializable]
         private class IAPState
