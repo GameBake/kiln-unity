@@ -29,11 +29,6 @@ namespace Kiln
 
     }
 
-    public class Configuration 
-    {
-        public List<DummyAd> DummyAds { get; set; }
-    }
-
     public interface IKilnObjectWrapper {
 
         AndroidJavaObject JavaInst { set;  }
@@ -317,42 +312,18 @@ namespace Kiln
 
         }
 
-        public Task Init(Configuration configuration) 
+        public Task Init() 
 
         {
-            string AD_UNIT_ID = "ad_unit_id";
+            // string AD_UNIT_ID = "ad_unit_id";
 
             AndroidJavaClass unityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
             AndroidJavaObject context = unityPlayer.GetStatic<AndroidJavaObject>("currentActivity");
-            // getBaseContext or getApplicationContext
             // AndroidJavaObject context = activity.Call<AndroidJavaObject>("getApplicationContext");
 
-            AndroidJavaObject configBuilder = new AndroidJavaObject("io.gamebake.kiln.KilnConfiguration$Builder", context, AD_UNIT_ID);
+            // AndroidJavaObject configBuilder = new AndroidJavaObject("io.gamebake.kiln.KilnConfiguration$Builder", context, AD_UNIT_ID);
 
-            if (configuration != null && configuration.DummyAds.Count > 0) 
-            {
-                AndroidJavaClass javaEnum = new AndroidJavaClass("io.gamebake.kiln.types.AdType");
-                AndroidJavaObject javaEnumInterstitial = javaEnum.GetStatic<AndroidJavaObject>("Interstitial");
-                AndroidJavaObject javaEnumRewarded = javaEnum.GetStatic<AndroidJavaObject>("Rewarded");
-                AndroidJavaObject javaEnumSel;
-                AndroidJavaObject arrayList = new AndroidJavaObject("java.util.ArrayList");
-
-                foreach (var item in configuration.DummyAds)
-                {
-                    if (item.AdType == (AdType)javaEnumInterstitial.Call<int>("ordinal")) {
-                        javaEnumSel = javaEnumInterstitial;
-                    } else {
-                        javaEnumSel = javaEnumRewarded;
-                    }
-                    AndroidJavaObject javaDummyAdd = new AndroidJavaObject("io.gamebake.kiln.types.DummyAd", item.PlacementID, javaEnumSel, item.RewardUser);
-                    arrayList.Call<bool>("add", javaDummyAdd);
-                }
-                configBuilder.Call<AndroidJavaObject>("withDummyAds", arrayList);            
-            }
-
-            AndroidJavaObject config = configBuilder.Call<AndroidJavaObject>("build");
-
-            kiln = new AndroidJavaObject("io.gamebake.kiln.Kiln", config);
+            kiln = new AndroidJavaObject("io.gamebake.kiln.Kiln", context);
 
             var aTcs = new TaskCompletionSource<object>();
 

@@ -149,23 +149,7 @@ namespace Kiln
         public static Task Init()
         {
 #if ANDROID_DEVICE
-            var config = new Configuration();
-
-            config.DummyAds = new List<DummyAd> { 
-                new DummyAd() 
-                {
-                    PlacementID="ABC001", 
-                    RewardUser=true, 
-                    AdType=AdType.REWARDED
-                }, 
-                new DummyAd() 
-                {
-                    PlacementID="ABC002",
-                    RewardUser=false,
-                    AdType=AdType.INTERSTITIAL
-                }
-            };
-            return Bridge.Init(config);
+            return Bridge.Init();
 #else
             var aTcs = new TaskCompletionSource<object>();
 
