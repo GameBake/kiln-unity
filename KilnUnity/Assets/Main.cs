@@ -28,24 +28,7 @@ public class Main : MonoBehaviour
         Debug.Log("Init button pressed!");
         try
         {
-            var config = new Configuration();
-
-            config.DummyAds = new List<DummyAd> { 
-                new DummyAd() 
-                {
-                    PlacementID="ABC001", 
-                    RewardUser=true, 
-                    AdType=AdType.REWARDED
-                }, 
-                new DummyAd() 
-                {
-                    PlacementID="ABC002",
-                    RewardUser=false,
-                    AdType=AdType.INTERSTITIAL
-                }
-            };
-
-            await kiln.Init(config);   
+            await kiln.Init();   
 
             Debug.Log("Initialized"); 
             // await kiln.LoadInterstitialAd("ABC002");
