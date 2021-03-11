@@ -1,39 +1,95 @@
-﻿using UnityEngine;
-using UnityEditor.Callbacks;
-using UnityEditor;
-using Kiln;
+﻿#if UNITY_EDITOR
 using System.Collections.Generic;
+using System.IO;
 using Kiln.SimpleJSON;
+using UnityEditor;
+using UnityEditor.Build;
+using UnityEditor.Build.Reporting;
+using UnityEditor.Callbacks;
+using UnityEngine;
 
-public class BuildPostProcessor
+namespace Kiln
 {
-    
-
-    [PostProcessBuildAttribute(1)]
-    public static void OnPostprocessBuild(BuildTarget target, string pathToBuiltProject) 
+    /// <summary>
+    /// KILN Build Pre Processor
+    /// </summary>
+    public class BuildPreProcessor : IPreprocessBuildWithReport
     {
-        Settings settings = Resources.Load<Settings>("KilnSettings");
+        public int callbackOrder { get { return 0; } }
 
-        // Copy the mocked leaderboard status
-        foreach (Settings.Leaderboard l in settings.Leaderboards)
+        void IPreprocessBuildWithReport.OnPreprocessBuild(BuildReport report)
         {
-            if (Leaderboard.IsSaved(l.Id))
+            // Check if it's trying to build to an unsuportted platform
+            if (EditorUserBuildSettings.activeBuildTarget != BuildTarget.Android)
             {
-                System.IO.File.Copy(Leaderboard.GetPath(l.Id), $"{pathToBuiltProject}/{Application.productName}/src/main/assets/{Leaderboard.GetFileName(l.Id)}");
+                // Plugin might be on a project that's not making use of it. So we'll just show a warning.
+                Debug.LogWarning($"<size=20>Kiln only supports Android for the moment.</size>");
+            }
+            else
+            {
+                Settings settings = Resources.Load<Settings>("KilnSettings");
+
+                // If we do have a kiln configuration we'll copy that configuration to the Android Build
+                if (settings != null)
+                {
+                    string assetsPath = "Assets/Plugins/Android/assets/";
+
+                    // We'll create the assets folder if it doesn't exist
+                    if (!Directory.Exists(assetsPath))
+                    {
+                        Directory.CreateDirectory(assetsPath);
+                    }
+
+                    string file;
+
+                    // Copy the mocked leaderboard status
+                    foreach (Settings.Leaderboard l in settings.Leaderboards)
+                    {
+                        if (Leaderboard.IsSaved(l.Id))
+                        {
+                            file = $"{assetsPath}/{Leaderboard.GetFileName(l.Id)}";
+                            System.IO.File.Copy(Leaderboard.GetPath(l.Id), file, true);
+                            BuildPostProcessor.CleanupFiles.Add(file);
+                        }
+                    }
+
+                    // Copy the mocked In App Purchases status
+                    file = $"{assetsPath}/{IAPHelper.StorageFileName}";
+                    System.IO.File.Copy(IAPHelper.StoragePath, file, true);
+                    BuildPostProcessor.CleanupFiles.Add(file);
+
+                    // Create kiln definitions
+                    var definitions = new KilnDefinition(settings);
+                    file = $"{assetsPath}/{KilnDefinition.FileName}";
+                    System.IO.File.WriteAllText(file, definitions.Serialize().ToString());
+                    BuildPostProcessor.CleanupFiles.Add(file);
+                }
             }
         }
+    }
 
-        // Copy the mocked In App Purchases status
-        System.IO.File.Copy(IAPHelper.StoragePath, $"{pathToBuiltProject}/{Application.productName}/src/main/assets/{IAPHelper.StorageFileName}");
+    /// <summary>
+    /// KILN Build Post Processor
+    /// </summary>
+    public class BuildPostProcessor
+    {
+        public static List<string> CleanupFiles = new List<string>();
 
-        // Create kiln definitions
-        var definitions = new KilnDefinition(settings);
-        string definitionsPath = $"{pathToBuiltProject}/{Application.productName}/src/main/assets/{KilnDefinition.FileName}";
-        System.IO.File.WriteAllText(definitionsPath, definitions.Serialize().ToString());
+        [PostProcessBuildAttribute(0)]
+        public static void OnPostprocessBuild(BuildTarget target, string pathToBuiltProject)
+        {
+            if (EditorUserBuildSettings.activeBuildTarget != BuildTarget.Android) return;
+
+            foreach (string file in new List<string>(CleanupFiles))
+            {
+                if (File.Exists(file)) File.Delete(file);
+                CleanupFiles.Remove(file);
+            }
+        }
     }
 
     [System.Serializable]
-    private class KilnDefinition
+    public class KilnDefinition
     {
         public static string FileName = "kiln-definitions-development.json";
         public struct LeaderboardSettings
@@ -134,24 +190,24 @@ public class BuildPostProcessor
             foreach (string id in Events) { events[id] = id; }
 
             // Leaderboards
-            foreach (KeyValuePair<string, LeaderboardSettings> l in Leaderboards) 
+            foreach (KeyValuePair<string, LeaderboardSettings> l in Leaderboards)
             {
                 JSONObject node = leaderboards[l.Key].AsObject;
                 node["id"] = l.Key;
-                node["ascending"] = l.Value.Ascending;;
+                node["ascending"] = l.Value.Ascending; ;
             }
 
             // In App Purchases
-            foreach (KeyValuePair<string, IAPSettings> i in IAP) 
+            foreach (KeyValuePair<string, IAPSettings> i in IAP)
             {
                 JSONObject node = iap[i.Key].AsObject;
                 node["id"] = i.Key;
-                node["consumable"] = i.Value.Consumable;;
-                node["price"] = i.Value.Price;;
+                node["consumable"] = i.Value.Consumable; ;
+                node["price"] = i.Value.Price; ;
             }
 
             return data;
         }
-
-    }    
+    }
 }
+#endif

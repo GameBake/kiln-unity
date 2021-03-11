@@ -23,8 +23,6 @@ namespace Kiln
         {
             LoadOrCreateSettings();
 
-            Debug.Log(Application.persistentDataPath);
-
             GetWindow<SettingsWindow>(false, "Kiln Settings Editor", true);
         }
 
@@ -38,23 +36,18 @@ namespace Kiln
 
             if (_settings == null)
             {
-                string[] directories = Directory.GetDirectories(Application.dataPath, "Kiln", SearchOption.AllDirectories);
-                string path = "";
-                foreach (var item in directories)
-                { 
-                    path = $"{item.Substring(Application.dataPath.Length + 1)}/Editor/Resources";
-                    break;
+                string kilnPath = Utils.GetFolderPath("Kiln");
+                if (kilnPath == null)
+                {
+                    throw new System.Exception("Kiln plugin folder not found. Can't locate Kiln settings nor create new ones.");
                 }
 
-                if (path == "")
-                {
-                    throw new System.Exception("Kiln folder not found. Can't locate Kiln settings nor create new ones.");
-                }
+                string path = $"{kilnPath}/{Constants.Folders.Settings}";
 
                 // We'll create the settings scriptable object
                 _settings = ScriptableObject.CreateInstance<Settings>();
                 
-                AssetDatabase.CreateAsset(_settings, $"Assets/{path}/KilnSettings.asset");
+                AssetDatabase.CreateAsset(_settings, $"{path}/KilnSettings.asset");
                 AssetDatabase.SaveAssets();
                 AssetDatabase.Refresh();
             }

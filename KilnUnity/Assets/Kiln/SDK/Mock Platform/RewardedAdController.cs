@@ -10,6 +10,11 @@ namespace Kiln
         [SerializeField] private Text _placementID;
         private TaskCompletionSource<IRewardedAdResponse> _tcs;
 
+        private void Awake()
+        {
+            DontDestroyOnLoad(this.gameObject);
+        }
+        
         /// <summary>
         /// The prefab is disabled by default, display it
         /// </summary>

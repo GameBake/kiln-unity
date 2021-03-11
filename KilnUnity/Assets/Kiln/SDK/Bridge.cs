@@ -29,6 +29,11 @@ namespace Kiln
 
     }
 
+    public class Configuration 
+    {
+        public List<DummyAd> DummyAds { get; set; }
+    }
+
     public interface IKilnObjectWrapper {
 
         AndroidJavaObject JavaInst { set;  }
@@ -40,10 +45,10 @@ namespace Kiln
 
         public AndroidJavaObject JavaInst { set => javaInst = value; }
 
-        public string getPlacementID() {
+        public string GetPlacementID() {
             return javaInst.Call<string>("getPlacementID");
         }
-        public bool getWithReward()
+        public bool GetWithReward()
         {
             return javaInst.Call<bool>("getWithReward");
         }
@@ -84,7 +89,10 @@ namespace Kiln
 
         public IPlayer GetPlayer()
         {
-            return javaInst.Call<AndroidPlayer>("getPlayer");
+            AndroidPlayer player = new AndroidPlayer();
+            player.JavaInst = javaInst.Call<AndroidJavaObject>("getPlayer");
+
+            return player;
         }
 
         new public string ToString()
@@ -106,8 +114,7 @@ namespace Kiln
 
         public string GetProductID()
         {
-            // TODO: This has been added by me (Bruno), need to be sorted on the Java side
-            return javaInst.Call<string>("id");
+            return javaInst.Call<string>("getProductID");
         }
 
         public string GetDescription()
@@ -269,12 +276,14 @@ namespace Kiln
                 List<T> outList = new List<T>();
                 int size = ((AndroidJavaObject)result).Call<int>("size");
 
+                System.Type type = wrapper.GetType();
                 for (int i = 0; i < size; i++)
                 {
-                    T instance = (T)System.Activator.CreateInstance(typeof(T));
+                    T instance = (T)System.Activator.CreateInstance(type);
                     ((IKilnObjectWrapper)instance).JavaInst = ((AndroidJavaObject)result).Call<AndroidJavaObject>("get", i);
                     outList.Add(instance);
                 }
+
                 Tcs.SetResult(outList);
             }
 
@@ -315,7 +324,7 @@ namespace Kiln
         public Task Init() 
 
         {
-            // string AD_UNIT_ID = "ad_unit_id";
+             // string AD_UNIT_ID = "ad_unit_id";
 
             AndroidJavaClass unityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
             AndroidJavaObject context = unityPlayer.GetStatic<AndroidJavaObject>("currentActivity");
@@ -516,10 +525,10 @@ namespace Kiln
         /// <param name="score">score to set</param>
         /// <param name="data">data optional. If the platform supports it, additional data to set.</param>
         /// <returns>Task</returns>
-        public Task SetUserScore(double score, object data) 
+        public Task SetUserScore(string leaderboardId, double score, object data) 
         {
             var aTcs = new TaskCompletionSource<object>();
-            kiln.Call("setUserScore", score, data, new Callback<object>() {
+            kiln.Call("setUserScore", leaderboardId, score, data, new Callback<object>() {
                 Tcs = aTcs
             });
             return aTcs.Task;        
@@ -552,10 +561,12 @@ namespace Kiln
         public Task<List<ILeaderboardEntry>> GetScores(int count, int offset, string id)
         {
             var aTcs = new TaskCompletionSource<List<ILeaderboardEntry>>();
-            kiln.Call("getScores",  count, offset, id, new ListCallback<ILeaderboardEntry>() {
+            
+            kiln.Call("getScores", count, offset, id, new ListCallback<ILeaderboardEntry>() {
                 Tcs = aTcs,
                 Wrapper = new AndroidLeaderboardEntry()
             });
+
             return aTcs.Task;
         }
 
@@ -576,10 +587,9 @@ namespace Kiln
         {
             var aTcs = new TaskCompletionSource<object>();
 
-            // TODO: Do the actual implementatiuon
-            // kiln.Call("showPlatformLeaderboardUI", new Callback<object>() {
-            //     Tcs = aTcs
-            // });
+            kiln.Call("showLeaderboardUI", new Callback<object>() {
+                Tcs = aTcs
+            });
 
             return aTcs.Task;        
         }

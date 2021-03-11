@@ -19,6 +19,8 @@ namespace Kiln
         {
             _autoCloseLabel.text = _autoCloseTime.ToString();
             _countdown = _autoCloseTime;
+
+            DontDestroyOnLoad(this.gameObject);
         }
         
         private void Update()
