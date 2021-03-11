@@ -2,8 +2,8 @@
 {
     public interface IRewardedAdResponse
     {
-        bool getWithReward();
-        string getPlacementID();
+        bool GetWithReward();
+        string GetPlacementID();
     }
 
     public class RewardedAdResponse : IRewardedAdResponse
@@ -11,12 +11,12 @@
         protected bool _rewardUser = false;
         public bool RewardUser { set { _rewardUser = value; } }
 
-        public string getPlacementID()
+        public string GetPlacementID()
         {
             throw new System.NotImplementedException();
         }
 
-        public bool getWithReward()
+        public bool GetWithReward()
         {
             return _rewardUser;
         }

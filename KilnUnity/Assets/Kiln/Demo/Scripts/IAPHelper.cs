@@ -119,7 +119,7 @@ namespace Kiln
 #if !UNITY_EDITOR && UNITY_ANDROID
             List<string> ids = new List<string>();
 
-            foreach (Product p in _products)
+            foreach (IProduct p in _products)
             {
                 ids.Add(p.GetProductID());
             }
@@ -140,7 +140,7 @@ namespace Kiln
 #if !UNITY_EDITOR && UNITY_ANDROID
             List<string> ids = new List<string>();
 
-            foreach (Purchase p in _nonConsumedPurchases)
+            foreach (IPurchase p in _nonConsumedPurchases)
             {
                 ids.Add(p.GetProductID());
             }
@@ -156,10 +156,10 @@ namespace Kiln
         /// </summary>
         /// <param name="productID"></param>
         /// <returns></returns>
-        public Purchase GetNonConsumedPurchase(string productID)
+        public IPurchase GetNonConsumedPurchase(string productID)
         {
 #if !UNITY_EDITOR && UNITY_ANDROID
-            foreach (Purchase p in _nonConsumedPurchases)
+            foreach (IPurchase p in _nonConsumedPurchases)
             {
                 if (p.GetProductID() == productID) return p;
             }

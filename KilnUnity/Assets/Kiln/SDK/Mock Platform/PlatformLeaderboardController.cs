@@ -13,6 +13,11 @@ namespace Kiln
 
         private TaskCompletionSource<object> _tcs;
 
+        private void Awake()
+        {
+            DontDestroyOnLoad(this.gameObject);
+        }
+        
         public void Show(TaskCompletionSource<object> tcs)
         {
             _tcs = tcs;

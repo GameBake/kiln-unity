@@ -596,7 +596,7 @@ namespace Kiln
         {
 #if ANDROID_DEVICE
             // TODO: Need to pass the id as well ?
-            return Bridge.SetUserScore(score, data);
+            return Bridge.SetUserScore(id, score, data);
 #else          
             CheckInitialized();
 
@@ -717,7 +717,7 @@ namespace Kiln
 
             var aTcs = new TaskCompletionSource<object>();
 
-            PlatformLeaderboardController leaderboards = GameObject.Instantiate(PlatformLeaderboardPrefab);
+            PlatformLeaderboardController leaderboards = MonoBehaviour.Instantiate(PlatformLeaderboardPrefab);
             leaderboards.Show(aTcs);
 
             return aTcs.Task;
@@ -770,7 +770,7 @@ namespace Kiln
         /// </summary>
         /// <param name="ids">List of identifiers to retrieve desired products</param>
         /// <returns></returns>
-        public Task<List<IProduct>> GetAvailableProducts(List<string> ids) 
+        public static Task<List<IProduct>> GetAvailableProducts(List<string> ids) 
         {
 #if ANDROID_DEVICE
             return Bridge.GetAvailableProducts(ids);

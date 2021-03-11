@@ -9,10 +9,16 @@ namespace Kiln
         [SerializeField] private Image _bannerImage;
         [SerializeField] private Text _label;
 
-        // (Screen.width * 160) / Screen.dpi )
+        private BannerPosition _position;
+        public BannerPosition Position { get { return _position;  } }
+        private BannerSize _maxSize;
+        public BannerSize MaxSize { get { return _maxSize;  } }
+
         public void Awake()
         {
             HideBanner();
+
+            DontDestroyOnLoad(this.gameObject);
         }
 
         

@@ -107,7 +107,6 @@ namespace Kiln
                 _initButton.SetActive(false);
                 _sectionButtons.SetActive(true);
 
-                // TODO: This needs to be improved and cleaned
                 if (Kiln.API.SupportsIAP())
                 {
                     IAPHelper.Instance.Products = await Kiln.API.GetAvailableProducts();
@@ -231,7 +230,7 @@ namespace Kiln
 
                 IRewardedAdResponse response = await Kiln.API.ShowRewardedAd(placementId);
                 
-                Logger.Log($"Rewarded Ad Displayed. With reward: {response.getWithReward()}");
+                Logger.Log($"Rewarded Ad Displayed. With reward: {response.GetWithReward()}");
             }
             catch (Kiln.Exception ex) 
             {
@@ -438,10 +437,10 @@ namespace Kiln
             {
                 string leaderboardID = await _idSelector.SelectID(Kiln.API.Settings.GetLeaderboardIds());
                 _idSelector.Close();
-                
+
                 List<ILeaderboardEntry> entries = await Kiln.API.GetScores(_getScoresAmount, _getScoresOffset, leaderboardID);
 
-                foreach (LeaderboardEntry entry in entries)
+                foreach (ILeaderboardEntry entry in entries)
                 {
                     Logger.Log(entry.ToString());
                 }
@@ -505,7 +504,7 @@ namespace Kiln
             {
                 List<IProduct> products = await Kiln.API.GetAvailableProducts();
 
-                foreach (Product p in products)
+                foreach (IProduct p in products)
                 {
                     Logger.Log(p.ToString());
                 }
@@ -588,7 +587,7 @@ namespace Kiln
                 string productID = await _idSelector.SelectID(IAPHelper.Instance.GetNonConsumedIDs());
                 _idSelector.Close();
 
-                Purchase pendingPurchase = IAPHelper.Instance.GetNonConsumedPurchase(productID);
+                IPurchase pendingPurchase = IAPHelper.Instance.GetNonConsumedPurchase(productID);
 
                 await Kiln.API.ConsumePurchasedProduct(pendingPurchase.GetPurchaseToken());
 
