@@ -149,6 +149,22 @@ namespace Kiln
         /// <summary>
         /// 
         /// </summary>
+        /// <returns></returns>
+        public List<string> GetInAppPurchasesIds()
+        {
+            List<string> data = new List<string>();
+
+            foreach (InAppPurchase iap in _iaps)
+            {
+                data.Add(iap.Id);
+            }
+
+            return data;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
         public bool IsValidInterstitialId(string id)

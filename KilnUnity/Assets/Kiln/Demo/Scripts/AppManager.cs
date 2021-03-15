@@ -554,7 +554,7 @@ namespace Kiln
         {
             try
             {
-                string productID = await _idSelector.SelectID(IAPHelper.Instance.GetProductIDs());
+                string productID = await _idSelector.SelectID(Kiln.API.Settings.GetInAppPurchasesIds());
                 _idSelector.Close();
 
                 IPurchase purchase = await Kiln.API.PurchaseProduct(productID, "DEVELOPER PAYLOAD TEST");

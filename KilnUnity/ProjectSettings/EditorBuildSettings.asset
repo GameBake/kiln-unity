@@ -8,10 +8,4 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Kiln/Demo/Demo Scene.unity
     guid: 9771c8ce274e14216b05d2f3fabbefe0
-  - enabled: 1
-    path: Assets/Scenes/Scene 1.unity
-    guid: 4b118403f89d64f53aca59ac42a502b5
-  - enabled: 1
-    path: Assets/Scenes/Scene 2.unity
-    guid: dbcffb01ae8624de3b2911bd61a88067
   m_configObjects: {}
