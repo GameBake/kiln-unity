@@ -1,89 +1,56 @@
-﻿#if UNITY_EDITOR
-using System.Collections.Generic;
-using System.IO;
-using Kiln.SimpleJSON;
+﻿using UnityEngine;
 using UnityEditor;
-using UnityEditor.Build;
-using UnityEditor.Build.Reporting;
-using UnityEditor.Callbacks;
-using UnityEngine;
+using UnityEditor.Android;
+using Kiln;
+using System.Collections.Generic;
+using Kiln.SimpleJSON;
 
-namespace Kiln
+public class BuildProcessor : IPostGenerateGradleAndroidProject
 {
-    /// <summary>
-    /// KILN Build Pre Processor
-    /// </summary>
-    public class BuildPreProcessor : IPreprocessBuildWithReport
+    public int callbackOrder
     {
-        public int callbackOrder { get { return 0; } }
-
-        void IPreprocessBuildWithReport.OnPreprocessBuild(BuildReport report)
-        {
-            // Check if it's trying to build to an unsuportted platform
-            if (EditorUserBuildSettings.activeBuildTarget != BuildTarget.Android)
-            {
-                // Plugin might be on a project that's not making use of it. So we'll just show a warning.
-                Debug.LogWarning($"<size=20>Kiln only supports Android for the moment.</size>");
-            }
-            else
-            {
-                Settings settings = Resources.Load<Settings>("KilnSettings");
-
-                // If we do have a kiln configuration we'll copy that configuration to the Android Build
-                if (settings != null)
-                {
-                    string assetsPath = "Assets/Plugins/Android/assets/";
-
-                    // We'll create the assets folder if it doesn't exist
-                    if (!Directory.Exists(assetsPath))
-                    {
-                        Directory.CreateDirectory(assetsPath);
-                    }
-
-                    string file;
-
-                    // Copy the mocked leaderboard status
-                    foreach (Settings.Leaderboard l in settings.Leaderboards)
-                    {
-                        if (Leaderboard.IsSaved(l.Id))
-                        {
-                            file = $"{assetsPath}/{Leaderboard.GetFileName(l.Id)}";
-                            System.IO.File.Copy(Leaderboard.GetPath(l.Id), file, true);
-                            BuildPostProcessor.CleanupFiles.Add(file);
-                        }
-                    }
-
-                    // Copy the mocked In App Purchases status
-                    file = $"{assetsPath}/{IAPHelper.StorageFileName}";
-                    System.IO.File.Copy(IAPHelper.StoragePath, file, true);
-                    BuildPostProcessor.CleanupFiles.Add(file);
-
-                    // Create kiln definitions
-                    var definitions = new KilnDefinition(settings);
-                    file = $"{assetsPath}/{KilnDefinition.FileName}";
-                    System.IO.File.WriteAllText(file, definitions.Serialize().ToString());
-                    BuildPostProcessor.CleanupFiles.Add(file);
-                }
-            }
-        }
+        get { return 0; }
     }
 
-    /// <summary>
-    /// KILN Build Post Processor
-    /// </summary>
-    public class BuildPostProcessor
+    public void OnPostGenerateGradleAndroidProject(string path)
     {
-        public static List<string> CleanupFiles = new List<string>();
-
-        [PostProcessBuildAttribute(0)]
-        public static void OnPostprocessBuild(BuildTarget target, string pathToBuiltProject)
+        // Check if it's trying to build to an unsuportted platform
+        if (EditorUserBuildSettings.activeBuildTarget != BuildTarget.Android)
         {
-            if (EditorUserBuildSettings.activeBuildTarget != BuildTarget.Android) return;
+            // Plugin might be on a project that's not making use of it. So we'll just show a warning.
+            Debug.LogWarning($"<size=20>Kiln only supports Android for the moment.</size>");
+            return;
+        }
+        else
+        {
+            Settings settings = Resources.Load<Settings>("KilnSettings");
 
-            foreach (string file in new List<string>(CleanupFiles))
+            // If we do have a kiln configuration we'll copy that configuration to the Android Build
+            if (settings != null)
             {
-                if (File.Exists(file)) File.Delete(file);
-                CleanupFiles.Remove(file);
+
+                string assetsPath = $"{path}/src/main/assets";
+
+                string file;
+
+                // Copy the mocked leaderboard status
+                foreach (Settings.Leaderboard l in settings.Leaderboards)
+                {
+                    if (Leaderboard.IsSaved(l.Id))
+                    {
+                        file = $"{assetsPath}/{Leaderboard.GetFileName(l.Id)}";
+                        System.IO.File.Copy(Leaderboard.GetPath(l.Id), file, true);
+                    }
+                }
+
+                // Copy the mocked In App Purchases status
+                file = $"{assetsPath}/{IAPHelper.StorageFileName}";
+                System.IO.File.Copy(IAPHelper.StoragePath, file, true);
+
+                // Create kiln definitions
+                var definitions = new KilnDefinition(settings);
+                file = $"{assetsPath}/{KilnDefinition.FileName}";
+                System.IO.File.WriteAllText(file, definitions.Serialize().ToString());
             }
         }
     }
@@ -210,4 +177,3 @@ namespace Kiln
         }
     }
 }
-#endif
