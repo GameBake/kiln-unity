@@ -73,3 +73,9 @@ crashlytics-build.properties
 # Android dependencies
 kiln.aar*
 /Assets/Plugins/*
+
+# EDM4U (It'll be added to the project by the plugin package export tool)
+/[Aa]ssets/ExternalDependencyManager/
+/[Aa]ssets/ExternalDependencyManager.meta
+/[Aa]ssets/PlayServicesResolver
+/[Aa]ssets/PlayServicesResolver.meta
