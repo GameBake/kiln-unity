@@ -145,7 +145,7 @@ namespace Kiln
         /// <summary>
         /// Initializes the SDK
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Task that'll return upon initializing all modules in the SDK</returns>
         public static Task Init()
         {
 #if ANDROID_DEVICE
@@ -200,10 +200,12 @@ namespace Kiln
 #endif
         }
 
+        #region Advertisement
+
         /// <summary>
-        /// Use this to check if the underlying platform supports interstitial ads
+        /// Checks for Interstitial Ads support
         /// </summary>
-        /// <returns>boolean true if it's supported, false otherwise</returns>
+        /// <returns><c>true</c> if supported, <c>false</c> otherwise</returns>
         public static bool SupportsInterstitialAds()
         {
 #if ANDROID_DEVICE
@@ -216,11 +218,11 @@ namespace Kiln
         }
 
         /// <summary>
-        /// It loads an interstitial ad. If the current platform doesn't support interstitial ads or there's a 
-        /// problem loading the Task will fail with an exception <see cref="Kiln.Exception"/> 
-        /// (you can check <see cref="SupportsInterstitialAds"/> previously).
+        /// Loads an Interstitial Ad. If the current platform doesn't support Interstitial Ads (check 
+        /// <see cref="SupportsInterstitialAds"/>), is provided an invalid identifier or there's a problem 
+        /// loading the ad, the Task will get an <see cref="Kiln.Exception"/> 
         /// </summary>
-        /// <param name="identifier">the ad identifier</param>
+        /// <param name="identifier">The Interstitial Ad identifier</param>
         /// <returns>Task</returns>
         public static Task LoadInterstitialAd(string identifier)
         {
@@ -241,7 +243,6 @@ namespace Kiln
 
             if (_interstitialAds[identifier] != null)
             {
-                // TODO: How does this behave on the bridge ?
                 throw new Kiln.Exception($"Interstitial Placement ID: {identifier} already loaded");
             }
 
@@ -256,11 +257,11 @@ namespace Kiln
         }
 
         /// <summary>
-        /// It shows the interstitial ad. If the platform doesn't support interstitial ads or there's any problem the 
-        /// Task will get an exception <see cref="Kiln.Exception"/> 
-        /// (check <see cref="SupportsInterstitialAds"/>). Remember to call <see cref="LoadInterstitialAd"/> previously.
+        /// Shows an Interstitial Ad. If the platform doesn't support Interstitial Ads (check <see cref="SupportsInterstitialAds"/>),
+        /// an invalid identifier is provided or the Interstitial Ad is not loaded (check <see cref="LoadInterstitialAd"/>), the
+        /// Task will get an <see cref="Kiln.Exception"/>
         /// </summary>
-        /// <param name="identifier">the ad identifier</param>
+        /// <param name="identifier">The Interstitial Ad identifier</param>
         /// <returns>Task</returns>
         public static Task ShowInterstitialAd(string identifier)
         {
@@ -297,9 +298,9 @@ namespace Kiln
         }
 
         /// <summary>
-        /// Use this to check if the underlying platform supports rewarded ads
+        /// Checks for Rewarded Ads support
         /// </summary>
-        /// <returns>boolean true if it's supported, false otherwise</returns>
+        /// <returns><c>true</c> if supported, <c>false</c> otherwise</returns>
         public static bool SupportsRewardedAds()
         {
 #if ANDROID_DEVICE
@@ -312,11 +313,11 @@ namespace Kiln
         }
 
         /// <summary>
-        /// It loads a rewarded ad. If the current platform doesn't support rewarded ads or there's a 
-        /// problem loading the Task will fail with an exception <see cref="Kiln.Exception"/> 
-        /// (you can check <see cref="SupportsRewardedAds"/> previously).
+        /// Loads a Rewarded Ad. If the current platform doesn't support Rewarded Ads (check 
+        /// <see cref="SupportsRewardedAds"/>), is provided with an invalid identifier or there's a 
+        /// problem loading the ad, the Task will get an <see cref="Kiln.Exception"/> 
         /// </summary>
-        /// <param name="identifier">the ad identifier</param>
+        /// <param name="identifier">The Rewarded Ad identifier</param>
         /// <returns>Task</returns>
         public static Task LoadRewardedAd(string identifier)  
         {
@@ -337,7 +338,6 @@ namespace Kiln
 
             if (_rewardedAds[identifier] != null)
             {
-                // TODO: How does this behave on the bridge ?
                 throw new Kiln.Exception($"Rewarded Placement ID: {identifier} already loaded");
             }
 
@@ -352,12 +352,12 @@ namespace Kiln
         }
 
         /// <summary>
-        /// It shows the rewarded ad. If the platform doesn't support rewarded ads or there's any problem the 
-        /// Task will get an exception <see cref="Kiln.Exception"/> 
-        /// (check <see cref="SupportsRewardedAds"/>). Remember to call <see cref="LoadRewardedAd"/> previously.
+        /// Shows a Rewarded Ad. If the platform doesn't support Rewarded Ads (check <see cref="SupportsRewardedAds"/>),
+        /// an invalid identifier is provided or the Rewarded Ad hasn't been loaded (check <see cref="LoadRewardedAd"/>) 
+        /// the Task will get an <see cref="Kiln.Exception"/> 
         /// </summary>
-        /// <param name="identifier">the ad identifier</param>
-        /// <returns>Task</returns>
+        /// <param name="identifier">The Rewarded Ad identifier</param>
+        /// <returns>Task that'll return a <see cref="Kiln.RewardedAdResponse"/> upon completion</returns>
         public static Task<IRewardedAdResponse> ShowRewardedAd(string identifier)
         {
 #if ANDROID_DEVICE
@@ -393,9 +393,9 @@ namespace Kiln
         }
 
         /// <summary>
-        /// Use this to check if the underlying platform supports banner ads
+        /// Checks for Banner Ads support
         /// </summary>
-        /// <returns>boolean true if it's supported, false otherwise</returns>
+        /// <returns><c>true</c> if supported, <c>false</c> otherwise</returns>
         public static bool SupportsBannerAds()
         {
 #if ANDROID_DEVICE
@@ -408,13 +408,13 @@ namespace Kiln
         }
 
         /// <summary>
-        /// It loads a banner ad. If the current platform doesn't support banner ads or there's a 
-        /// problem loading the Task will fail with an exception <see cref="Kiln.Exception"/>
-        /// (you can check <see cref="SupportsBannerAds"/> previously).
+        /// Loads a Banner Ad. If the current platform doesn't support Banner Ads (check <see cref="SupportsBannerAds"/>),
+        /// the provided identifier is invalid or the Banner Ad has already been loaded
+        /// the Task will get an <see cref="Kiln.Exception"/>
         /// </summary>
-        /// <param name="identifier">the ad identifier</param>
-        /// <param name="position">Where in the screen to position the loaded ad. See <see cref="Kiln.BannerPosition"/></param>
-        /// <param name="maxSize">The maximum size of the banner to load. See <see cref="Kiln.BannerSize"/>.</param>
+        /// <param name="identifier">The Banner Ad identifier</param>
+        /// <param name="position">Where in the screen to position the Banner Ad. See <see cref="Kiln.BannerPosition"/></param>
+        /// <param name="maxSize">The maximum size of the Banner Ad to load. See <see cref="Kiln.BannerSize"/>.</param>
         /// <returns>Task</returns>
         public static Task LoadBannerAd(string identifier, BannerPosition position, BannerSize maxSize = BannerSize.Width320Height50)
         {
@@ -451,11 +451,11 @@ namespace Kiln
         }
 
         /// <summary>
-        /// It shows the banner ad. If the platform doesn't support banner ads or there's any problem the 
-        /// Task will get an exception <see cref="Kiln.Exception"/>
-        /// (check <see cref="SupportsBannerAds"/>). Remember to call <see cref="LoadBannerAd"/> previously.
+        /// Shows a Banner Ad. If the platform doesn't support Banner Ads (check <see cref="SupportsBannerAds"/>),
+        /// an invalid identifier is provided or the Banner Ad is not loaded (check <see cref="LoadBannerAd"/>), the
+        /// Task will get an <see cref="Kiln.Exception"/>
         /// </summary>
-        /// <param name="identifier">the ad identifier</param>
+        /// <param name="identifier">The Banner Ad identifier</param>
         /// <returns>Task</returns>
         public static Task ShowBannerAd(string identifier)
         {
@@ -491,11 +491,11 @@ namespace Kiln
         }
 
         /// <summary>
-        /// It hides the banner ad. If the platform doesn't support banner ads or there's any problem the 
-        /// Task will get an exception <see cref="Kiln.Exception"/>
-        /// (check <see cref="SupportsBannerAds"/>). Remember to call <see cref="LoadBannerAd"/> previously.
+        /// Hides a Banner Ad. If the platform doesn't support Banner Ads (check <see cref="SupportsBannerAds"/>), 
+        /// an invalid Banner id is provided, or the Banner Ad has not been previously loaded (check <see cref="LoadBannerAd"/>)
+        /// the Task will get an <see cref="Kiln.Exception"/>
         /// </summary>
-        /// <param name="identifier">the ad identifier</param>
+        /// <param name="identifier">The Banner Ad identifier</param>
         /// <returns>Task</returns>
         public static Task HideBannerAd(string identifier)
         {
@@ -531,11 +531,11 @@ namespace Kiln
         }
 
         /// <summary>
-        /// It destroys the banner ad. If the platform doesn't support banner ads or there's any problem the 
-        /// Task will get an exception <see cref="Kiln.Exception"/>
-        /// (check <see cref="SupportsBannerAds"/>). Remember to call <see cref="LoadBannerAd"/> previously.
+        /// It destroys the banner ad. If the platform doesn't support banner ads (check <see cref="SupportsBannerAds"/>),
+        /// the identifier is invalid or the banner hasn't been previously loaded (check <see cref="LoadBannerAd"/>) 
+        /// the Task will get an <see cref="Kiln.Exception"/>.
         /// </summary>
-        /// <param name="identifier">the ad identifier</param>
+        /// <param name="identifier">The banner ad identifier</param>
         /// <returns>Task</returns>
         public static Task DestroyBannerAd(string identifier)
         {
@@ -558,7 +558,6 @@ namespace Kiln
 
             if (_bannerAds[identifier] == null)
             {
-                // TODO: How does this behave on the bridge ?
                 throw new Kiln.Exception($"Banner Placement ID: {identifier} not loaded");
             }
             
@@ -570,10 +569,14 @@ namespace Kiln
 #endif
         }
 
+        #endregion
+
+        #region Leaderboards
+
         /// <summary>
-        /// Check If the current platform supports leaderboards
+        /// Checks for Leaderboards support
         /// </summary>
-        /// <returns><c>true</c> if platform supports leaderboards, false otherwise</returns>
+        /// <returns><c>true</c> if supported, <c>false</c> otherwise</returns>
         public static bool SupportsLeaderboards() 
         {
 #if ANDROID_DEVICE
@@ -586,16 +589,16 @@ namespace Kiln
         }
 
         /// <summary>
-        /// It sets the user score. If the platform doesn't support leaderboards the Task  
-        /// will get an exception <see cref="Kiln.Exception"/>
+        /// Sets the current <see cref="Kiln.Player"/>'s score. If the platform doesn't support Leaderboards
+        /// (check <see cref="SupportsLeaderboards"/> the Task will get an <see cref="Kiln.Exception"/>
         /// </summary>
-        /// <param name="score">score to set</param>
-        /// <param name="data">data optional. If the platform supports it, additional data to set.</param>
+        /// <param name="id">Leaderboard identifier</param>
+        /// <param name="score">Score to set</param>
+        /// <param name="data">(Optional) If the platform supports it, additional data to set.</param>
         /// <returns>Task</returns>
         public static Task SetUserScore(string id, double score, object data = null)
         {
 #if ANDROID_DEVICE
-            // TODO: Need to pass the id as well ?
             return Bridge.SetUserScore(id, score, data);
 #else          
             CheckInitialized();
@@ -621,11 +624,11 @@ namespace Kiln
         }
 
         /// <summary>
-        /// It retrieves the user score. If the platform doesn't support leaderboards the Task  
-        /// will get an exception <see cref="Kiln.Exception"/>
+        /// Retrieves the current <see cref="Kiln.Player"/>'s <see cref="Kiln.LeaderboardEntry"/>. If the platform doesn't support 
+        /// Leaderboards the Task (check <see cref="SupportsLeaderboards"/>) will get an <see cref="Kiln.Exception"/>
         /// </summary>
-        /// <param name="id">the user identifier</param>
-        /// <returns>Task</returns>
+        /// <param name="id">The Leaderboard identifier</param>
+        /// <returns>Task that'll return a <see cref="Kiln.LeaderboardEntry"/> upon completion</returns>
         public static Task<ILeaderboardEntry> GetUserScore(string id)
         {
 #if ANDROID_DEVICE
@@ -652,13 +655,13 @@ namespace Kiln
         }
 
         /// <summary>
-        /// It gets leaderboard scores for all players. If the platform doesn't support leaderboards the Task  
-        /// will get an exception <see cref="Kiln.Exception"/>
+        /// Retrieves a list of <see cref="Kiln.LeaderboardEntry"/> for all players. If the platform doesn't support leaderboards 
+        /// (check <see cref="SupportsLeaderboards"/>) the Task will get an <see cref="Kiln.Exception"/>
         /// </summary>
-        /// <param name="count">number of entries to retrieve. default to 10 if unspecified</param>
-        /// <param name="offset">The offset from the top of the leaderboard that entries will be fetched from. default 0 if not specified</param>
-        /// <param name="id">the leaderboard identifier</param>
-        /// <returns></returns>
+        /// <param name="count">Amount of <see cref="Kiln.LeaderboardEntry"/> to retrieve</param>
+        /// <param name="offset">Offset from the top of the Leaderboard that <see cref="Kiln.LeaderboardEntry"/> will be fetched from</param>
+        /// <param name="id">Leaderboard identifier</param>
+        /// <returns>Task that'll return a list of <see cref="Kiln.LeaderboardEntry"/> upon completion</returns>
         public static Task<List<ILeaderboardEntry>> GetScores(int count, int offset, string id)
         {
 #if ANDROID_DEVICE
@@ -685,9 +688,9 @@ namespace Kiln
         }
 
         /// <summary>
-        /// Check If the current platform supports a native leaderboards ui
+        /// Checks for Native Leaderboard UI support
         /// </summary>
-        /// <returns><c>true</c> if platform supports native leaderboards ui, false otherwise</returns>
+        /// <returns><c>true</c> if supported, <c>false</c> otherwise</returns>
         public static bool SupportsPlatformLeaderboardUI()
         {
 #if ANDROID_DEVICE
@@ -700,7 +703,8 @@ namespace Kiln
         }
 
         /// <summary>
-        /// Shows native leaderboard ui if supported. Otherwise return <see cref="Kiln.Exception"/>
+        /// Shows native Leaderboard UI if supported (check <see cref="SupportsPlatformLeaderboardUI"/>). 
+        /// Otherwise returns a <see cref="Kiln.Exception"/>
         /// </summary>
         /// <returns>Task</returns>
         public static Task ShowPlatformLeaderboardUI()
@@ -724,10 +728,14 @@ namespace Kiln
 #endif
         }
 
+        #endregion
+
+        #region In App Purchases
+
         /// <summary>
-        /// It checks if the current platform supports in app purchases
+        /// Checks for In App Purchases support
         /// </summary>
-        /// <returns>true if supported, false otherwise</returns>
+        /// <returns><c>true</c> if supported, <c>false</c> otherwise</returns>
         public static bool SupportsIAP()
         {
 #if ANDROID_DEVICE
@@ -740,10 +748,10 @@ namespace Kiln
         }
 
         /// <summary>
-        /// Retrieves the list of available products to be purchased. If the platform doesn't support
-        /// purchases the Task will get an exception <see cref="Kiln.Exception"/>
+        /// Retrieves a list of all available for purcharse <see cref="Kiln.Product"/>. If the platform 
+        /// doesn't support In App Purchases (see <see cref="SupportsIAP"/>) the Task will get an <see cref="Kiln.Exception"/>
         /// </summary>
-        /// <returns>Task</returns>
+        /// <returns>Task that'll return a list of <see cref="Kiln.Product"/> upon completion</returns>
         public static Task<List<IProduct>> GetAvailableProducts()
         {
 #if ANDROID_DEVICE
@@ -765,11 +773,11 @@ namespace Kiln
         }
 
         /// <summary>
-        /// Retrieves the list of available products to be purchased. If the platform doesn't support
-        /// purchases the Task will get an exception <see cref="Kiln.Exception"/>
+        /// Retrieves a filtered list of available for purcharse <see cref="Kiln.Product"/>. If the platform 
+        /// doesn't support In App Purchases (see <see cref="SupportsIAP"/>) the Task will get an <see cref="Kiln.Exception"/>
         /// </summary>
-        /// <param name="ids">List of identifiers to retrieve desired products</param>
-        /// <returns></returns>
+        /// <param name="ids">List of identifiers to get in the list of <see cref="Kiln.Product"/> response</param>
+        /// <returns>Task that'll return a list of <see cref="Kiln.Product"/> upon completion</returns>
         public static Task<List<IProduct>> GetAvailableProducts(List<string> ids) 
         {
 #if ANDROID_DEVICE
@@ -791,10 +799,10 @@ namespace Kiln
         }
 
         /// <summary>
-        /// It gets the list of products already purchased but still unconsumed. If the platform doesn't support 
-        /// purchases the Task will get an exception <see cref="Kiln.Exception"/>
+        /// Retrieves a list of purchased <see cref="Kiln.Product"/>. If the platform doesn't support 
+        /// In App Purchases (see <see cref="SupportsIAP"/>) the Task will get an <see cref="Kiln.Exception"/>
         /// </summary>
-        /// <returns>Task</returns>
+        /// <returns>Task that'll return a list of <see cref="Kiln.Product"/> upon completion</returns>
         public static Task<List<IPurchase>> GetPurchasedProducts()
         {
 #if ANDROID_DEVICE
@@ -816,12 +824,12 @@ namespace Kiln
         }
 
         /// <summary>
-        /// Purchase of a product. If the platform doesn't support purchases 
-        /// the Task will get an exception <see cref="Kiln.Exception"/>
+        /// Launches the purchase flow of a <see cref="Kiln.Product"/>. If the platform doesn't support 
+        /// In App Purchases (check <see cref="SupportsIAP"/>) the Task will get an <see cref="Kiln.Exception"/>
         /// </summary>
-        /// <param name="productID">id to refer the product to be purchased</param>
-        /// <param name="payload">additional data to send with the purchase</param>
-        /// <returns></returns>
+        /// <param name="productID">Identifier of the <see cref="Kiln.Product"/> to be purchased</param>
+        /// <param name="payload">Additional data to send with the purchase</param>
+        /// <returns>Task that'll return a <see cref="Kiln.Purchase"/> upon successful completion</returns>
         public static Task<IPurchase> PurchaseProduct(string productID, string payload)
         {
 #if ANDROID_DEVICE
@@ -841,10 +849,10 @@ namespace Kiln
         }
 
         /// <summary>
-        /// It consumes a product already purchased. If the platform doesn't support purchases 
-        /// the Task will get an exception <see cref="Kiln.Exception"/>
+        /// It consumes an already purchased consumable product. If the platform doesn't support purchases 
+        /// the Task will get an <see cref="Kiln.Exception"/>
         /// </summary>
-        /// <param name="purchaseToken">the product token</param>
+        /// <param name="purchaseToken">Token associated with the <see cref="Kiln.Purchase"/></param>
         /// <returns>Task</returns>
         public static Task ConsumePurchasedProduct(string purchaseToken)
         {
@@ -868,23 +876,29 @@ namespace Kiln
 #endif
         }
 
+        #endregion
+
+        #region Analytics
+
         /// <summary>
-        /// 
+        /// Sends an Analytics Event.
         /// </summary>
-        /// <param name="evt"></param>
-        public static void SubmitAnalyticsEvent(string evt)
+        /// <param name="identifier">The Event identifier</param>
+        public static void SubmitAnalyticsEvent(string identifier)
         {
 #if ANDROID_DEVICE
-            Bridge.SubmitAnalyticsEvent(evt);
+            Bridge.SubmitAnalyticsEvent(identifier);
 #else
             CheckInitialized();
 
-            if (!Settings.IsValidAnalyticsEventId(evt))
+            if (!Settings.IsValidAnalyticsEventId(identifier))
             {
-                throw new Kiln.Exception($"Invalid Analytics Event ID: {evt}");
+                throw new Kiln.Exception($"Invalid Analytics Event ID: {identifier}");
             }
 #endif
         }
+
+        #endregion
 
     }
 
