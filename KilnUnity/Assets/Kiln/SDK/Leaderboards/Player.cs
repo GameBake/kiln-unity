@@ -9,11 +9,11 @@
 
     public class Player : IPlayer
     {
-        protected string _id;
+        private string _id;
         public string ID { set { _id = value;  } }
-        protected string _name;
+        private string _name;
         public string Name { set { _name = value; } }
-        protected string _photoURL;
+        private string _photoURL;
         public string PhotoURL { set { _photoURL = value; } }
 
         public string GetId()

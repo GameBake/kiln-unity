@@ -8,7 +8,7 @@
 
     public class RewardedAdResponse : IRewardedAdResponse
     {
-        protected bool _rewardUser = false;
+        private bool _rewardUser = false;
         public bool RewardUser { set { _rewardUser = value; } }
 
         public string GetPlacementID()

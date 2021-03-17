@@ -17,11 +17,11 @@
     
     public class Product : IProduct
     {
-        protected string _id;
+        private string _id;
         public string ID { set { _id = value; } }
-        protected string _price;
+        private string _price;
         public string Price { set { _price = value; } }
-        protected ProductType _type;
+        private ProductType _type;
         public ProductType Type { set { _type = value; } }
 
         public string GetProductID()

@@ -12,11 +12,11 @@
 
     public class Purchase : IPurchase
     {
-        protected string _productID;
+        private string _productID;
         public string ProductID { set { _productID = value; } }
-        protected string _purchaseToken;
+        private string _purchaseToken;
         public string PurchaseToken { set { _purchaseToken = value; } }
-        protected string _developerPayload;
+        private string _developerPayload;
         public string DeveloperPayload { set { _developerPayload= value; } }
 
         public string GetDeveloperPayload()
