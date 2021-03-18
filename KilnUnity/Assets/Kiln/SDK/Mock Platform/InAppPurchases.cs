@@ -256,6 +256,20 @@ namespace Kiln
                     }
                 }
             }
+            else
+            {
+                // It is not a consumable, so we'll to see if we've got an unconsumed one waiting for consumption
+                foreach (Purchase aux in _nonConsumedPurchases)
+                {
+                    if (aux.GetProductID() == productID)
+                    {
+                        aTcs.SetException(new Kiln.Exception($"Product {p.GetProductID()} is already owned and waiting for consumption."));
+                        showPurchaseWindow = false;
+                        break;
+                    }
+                }
+                
+            }
 
             if (showPurchaseWindow)
             {
