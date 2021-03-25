@@ -108,6 +108,26 @@ namespace Kiln
             }
         }
 
+        /// <summary>
+        /// Returns whether a saved file for with IAP Data id is present or not
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public static bool IsSaved()
+        {
+            return File.Exists(IAPHelper.StoragePath);
+        }
+
+        /// <summary>
+        /// Returns a JSON string with an valid empty IAP State
+        /// </summary>
+        /// <returns></returns>
+        public static string GetEmptyState()
+        {
+            IAPState state = new IAPState();
+            return JsonUtility.ToJson(state);
+        }
+
         #region Public API
 
         /// <summary>
