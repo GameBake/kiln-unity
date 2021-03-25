@@ -417,19 +417,19 @@ namespace Kiln
 
             GUILayout.Space(20);
 
-            if (_settings.SupportsRewardedAds || _settings.SupportsInterstitialAds)
+            if ((_settings.SupportsRewardedAds || _settings.SupportsInterstitialAds) && _ads != null)
             {
                 _ads.DoLayoutList();
                 GUILayout.Space(20);
             }
 
-            if (_settings.SupportsIAP)
+            if (_settings.SupportsIAP && _iaps != null)
             {
                 _iaps.DoLayoutList();
                 GUILayout.Space(20);
             }
 
-            if (_settings.SupportsLeaderboards)
+            if (_settings.SupportsLeaderboards && _leaderboards != null)
             {
                 _leaderboards.DoLayoutList();
                 GUILayout.Space(20);
