@@ -11,7 +11,10 @@ namespace Kiln
     /// </summary>
     public class InAppPurchases
     {
-        private static string _storagePath = $"{Application.persistentDataPath}/KilnIAPData.json";
+        private static string _storageFileName = "KilnIAPData.json";
+        public static string StorageFileName { get { return _storageFileName; } }
+        private static string _storagePath = $"{Application.persistentDataPath}/{_storageFileName}";
+        public static string StoragePath { get { return _storagePath;  } }
 
         private static IAPController _iapPrefab;
         public static IAPController IAPPrefab
@@ -49,16 +52,15 @@ namespace Kiln
             }
 
             public string[] Purchases;
-            // public string[] Owned;
             public PendingPurchase[] NonConsumed;
         }
 
         private List<IProduct> _products = new List<IProduct>();
         public List<IProduct> Products { get { return _products; } }
-        // private List<Product> _ownedProducts = new List<Product>();
         private List<IPurchase> _purchases = new List<IPurchase>();
         public List<IPurchase> Purchases { get { return _purchases; } }
         private List<IPurchase> _nonConsumedPurchases = new List<IPurchase>();
+        public List<IPurchase> NonConsumedPurchases { get { return _nonConsumedPurchases; } }
         [SerializeField] private IAPState _state;
 
         public InAppPurchases()
@@ -94,14 +96,6 @@ namespace Kiln
                     _purchases.Add(p);
                 }
 
-                // foreach (string productID in _state.Owned)
-                // {
-                //     Product p = new Product();
-                //     p.ID = productID;
-
-                //     _ownedProducts.Add(p);
-                // }
-
                 foreach (IAPState.PendingPurchase pending in _state.NonConsumed)
                 {
                     Purchase p = new Purchase();
@@ -125,12 +119,6 @@ namespace Kiln
                 _state.Purchases[i] = _purchases[i].GetProductID();
             }
 
-            // _state.Owned = new string[_ownedProducts.Count];
-            // for (int i = 0; i < _ownedProducts.Count; i++)
-            // {
-            //     _state.Owned[i] = _ownedProducts[i].GetProductID();
-            // }
-
             _state.NonConsumed = new IAPState.PendingPurchase[_nonConsumedPurchases.Count];
             for (int i = 0; i < _nonConsumedPurchases.Count; i++)
             {
@@ -148,6 +136,26 @@ namespace Kiln
             {
                 File.Delete(_storagePath);
             }
+        }
+
+        /// <summary>
+        /// Returns whether a saved file for with IAP Data id is present or not
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public static bool IsSaved()
+        {
+            return File.Exists(InAppPurchases.StoragePath);
+        }
+
+        /// <summary>
+        /// Returns a JSON string with an valid empty IAP State
+        /// </summary>
+        /// <returns></returns>
+        public static string GetEmptyState()
+        {
+            IAPState state = new IAPState();
+            return JsonUtility.ToJson(state);
         }
 
         /// <summary>
@@ -171,10 +179,9 @@ namespace Kiln
         /// <param name="p"></param>
         private void ProcessCompletedPurchase(IPurchase p)
         {
-            if (GetProduct(p.GetProductID()).GetProductType() == ProductType.CONSUMABLE)
-            {
-                _nonConsumedPurchases.Add(p);
-            }
+            // Even if it's a non consumable, we'll add it to the non consumed purchases list
+            // which is the list of active IAPs to return upon calling GetPurchasedProducts
+            _nonConsumedPurchases.Add(p);
             
             _purchases.Add(p);
 
@@ -242,33 +249,23 @@ namespace Kiln
 
             var aTcs = new TaskCompletionSource<IPurchase>();
 
-            // If it's a non consumable, we'll check if it's already owned
             bool showPurchaseWindow = true;
-            if (p.GetProductType() == ProductType.NON_CONSUMABLE)
+            foreach (Purchase aux in _nonConsumedPurchases)
             {
-                foreach (Purchase aux in _purchases)
+                if (aux.GetProductID() == productID)
                 {
-                    if (aux.GetProductID() == productID)
+                    if (p.GetProductType() == ProductType.NON_CONSUMABLE) 
                     {
                         aTcs.SetException(new Kiln.Exception($"Product {p.GetProductID()} is a non consumable and already owned."));
-                        showPurchaseWindow = false;
-                        break;
                     }
-                }
-            }
-            else
-            {
-                // It is not a consumable, so we'll to see if we've got an unconsumed one waiting for consumption
-                foreach (Purchase aux in _nonConsumedPurchases)
-                {
-                    if (aux.GetProductID() == productID)
+                    else
                     {
                         aTcs.SetException(new Kiln.Exception($"Product {p.GetProductID()} is already owned and waiting for consumption."));
-                        showPurchaseWindow = false;
-                        break;
                     }
+                    
+                    showPurchaseWindow = false;
+                    break;
                 }
-                
             }
 
             if (showPurchaseWindow)
@@ -292,16 +289,27 @@ namespace Kiln
         /// 
         /// </summary>
         /// <param name="purchaseToken"></param>
-        public void ConsumePurchasedProduct(string purchaseToken)
+        public Task ConsumePurchasedProduct(string purchaseToken)
         {
+            var aTcs = new TaskCompletionSource<object>();
+
             bool done = false;
             foreach (Purchase p in _nonConsumedPurchases)
             {
                 if (p.GetPurchaseToken() == purchaseToken)
                 {
-                    _nonConsumedPurchases.Remove(p);
-                    // _ownedProducts.Add(GetProduct(p.GetProductID()));
+                    if (GetProduct(p.GetProductID()).GetProductType() == ProductType.NON_CONSUMABLE) 
+                    {
+                        aTcs.SetException(new Kiln.Exception($"Product {p.GetProductID()} is a non consumable and can't be consumed."));
+                    }
+                    else
+                    {
+                        _nonConsumedPurchases.Remove(p);
+                        aTcs.SetResult(null);
 
+                        Save();
+                    }
+                    
                     done = true;
                     break;
                 }
@@ -312,7 +320,7 @@ namespace Kiln
                 throw new Kiln.Exception($"No pending purchase with a {purchaseToken} token found.");
             }
 
-            Save();
+            return aTcs.Task;
         }
 
         #endregion

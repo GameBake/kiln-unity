@@ -45,14 +45,14 @@ namespace Kiln
                     }
 
                     // Copy the mocked In App Purchases status
-                    file = $"{assetsPath}/{IAPHelper.StorageFileName}";
-                    if (IAPHelper.IsSaved())
+                    file = $"{assetsPath}/{InAppPurchases.StorageFileName}";
+                    if (InAppPurchases.IsSaved())
                     {
-                        System.IO.File.Copy(IAPHelper.StoragePath, file, true);
+                        System.IO.File.Copy(InAppPurchases.StoragePath, file, true);
                     }
                     else
                     {
-                        System.IO.File.WriteAllText(file, IAPHelper.GetEmptyState());
+                        System.IO.File.WriteAllText(file, InAppPurchases.GetEmptyState());
                     }
 
                     // Create kiln definitions

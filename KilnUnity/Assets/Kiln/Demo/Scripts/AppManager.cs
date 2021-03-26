@@ -106,11 +106,6 @@ namespace Kiln
 
                 _initButton.SetActive(false);
                 _sectionButtons.SetActive(true);
-
-                if (Kiln.API.SupportsIAP())
-                {
-                    IAPHelper.Instance.Products = await Kiln.API.GetAvailableProducts();
-                }
             }
             catch (Kiln.Exception ex) 
             {
@@ -559,10 +554,6 @@ namespace Kiln
 
                 IPurchase purchase = await Kiln.API.PurchaseProduct(productID, "DEVELOPER PAYLOAD TEST");
 
-#if !UNITY_EDITOR && UNITY_ANDROID
-                IAPHelper.Instance.NonConsumedPurchases.Add(purchase);
-#endif
-
                 Logger.Log($"Product {purchase.GetProductID()} ready for consumption");
             }
             catch (Kiln.Exception ex) 
@@ -584,18 +575,21 @@ namespace Kiln
         {
             try
             {
-                string productID = await _idSelector.SelectID(IAPHelper.Instance.GetNonConsumedIDs());
+                // First we'll compose a list of purchase Tokens available
+                List<IPurchase> activePurchases = await Kiln.API.GetPurchasedProducts();
+                List<string> tokenList = new List<string>();
+
+                foreach (Purchase p in activePurchases)
+                {
+                    tokenList.Add(p.GetPurchaseToken());
+                }
+
+                string purchaseToken = await _idSelector.SelectID(tokenList);
                 _idSelector.Close();
 
-                IPurchase pendingPurchase = IAPHelper.Instance.GetNonConsumedPurchase(productID);
+                await Kiln.API.ConsumePurchasedProduct(purchaseToken);
 
-                await Kiln.API.ConsumePurchasedProduct(pendingPurchase.GetPurchaseToken());
-
-#if !UNITY_EDITOR && UNITY_ANDROID
-                IAPHelper.Instance.NonConsumedPurchases.Remove(pendingPurchase);
-#endif
-
-                Logger.Log($"Product {productID} consumed.");
+                Logger.Log($"Product with token {purchaseToken} consumed.");
             }
             catch (Kiln.Exception ex) 
             {
