@@ -85,6 +85,18 @@ namespace Kiln
             get { return _supportsPlatformLeaderboardUI; }
             set { _supportsPlatformLeaderboardUI = value; }
         }
+        [SerializeField] private bool _exportIAPState = false;
+        public bool ExportIAPState
+        {
+            get { return _exportIAPState; }
+            set { _exportIAPState = value; }
+        }
+        [SerializeField] private bool _exportLeaderboardState = false;
+        public bool ExportLeaderboardState
+        {
+            get { return _exportLeaderboardState; }
+            set { _exportLeaderboardState = value; }
+        }
         
         /// <summary>
         /// 
