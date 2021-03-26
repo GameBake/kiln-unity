@@ -40,13 +40,24 @@ namespace Kiln
                         if (Leaderboard.IsSaved(l.Id))
                         {
                             file = $"{assetsPath}/{Leaderboard.GetFileName(l.Id)}";
-                            System.IO.File.Copy(Leaderboard.GetPath(l.Id), file, true);
+
+                            if (settings.ExportLeaderboardState)
+                            {
+                                System.IO.File.Copy(Leaderboard.GetPath(l.Id), file, true);
+                            }
+                            else
+                            {
+                                // If we don't want to export our current Leaderboard states
+                                // we'll just create new ones
+                                Leaderboard aux = new Leaderboard(l.Id, 100, l.Type, false);
+                                System.IO.File.WriteAllText(file, aux.ToJson());
+                            }
                         }
                     }
 
                     // Copy the mocked In App Purchases status
                     file = $"{assetsPath}/{InAppPurchases.StorageFileName}";
-                    if (InAppPurchases.IsSaved())
+                    if (InAppPurchases.IsSaved() && settings.ExportIAPState)
                     {
                         System.IO.File.Copy(InAppPurchases.StoragePath, file, true);
                     }

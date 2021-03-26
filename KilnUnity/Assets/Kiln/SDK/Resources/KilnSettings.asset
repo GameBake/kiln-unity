@@ -54,3 +54,5 @@ MonoBehaviour:
   _supportsLeaderboards: 1
   _supportsIAP: 1
   _supportsPlatformLeaderboardUI: 1
+  _exportIAPState: 0
+  _exportLeaderboardState: 0

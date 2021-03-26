@@ -34,12 +34,13 @@ namespace Kiln
         [SerializeField] private LeaderboardType _type;
         private const string PLAYER_KEY = "PLAYER";
 
-        public Leaderboard(string id = "leaderboard", int amount = 100, LeaderboardType type = LeaderboardType.HIGH_TO_LOW)
+        public Leaderboard(string id = "leaderboard", int amount = 100, LeaderboardType type = LeaderboardType.HIGH_TO_LOW, bool persistOnInstantiate = true)
         {
             _id = id;
             _type = type;
             Initialize(amount);
-            Save();
+            
+            if(persistOnInstantiate) Save();
         }
 
         /// <summary>
@@ -152,6 +153,16 @@ namespace Kiln
         /// </summary>
         private void Save()
         {
+            string path = GetPath(_id);
+
+            File.WriteAllText(path, this.ToJson());
+        }
+
+        /// <summary>
+        /// Returns a JSON representation of the leaderboard
+        /// </summary>
+        public string ToJson()
+        {
             // We'll first dump the dictionary into a serializable array of Entry structs
             _serializableData = new Entry[_data.Count];
 
@@ -163,9 +174,7 @@ namespace Kiln
                 index++;
             }
 
-            string path = GetPath(_id);
-
-            File.WriteAllText(path, JsonUtility.ToJson(this));
+            return JsonUtility.ToJson(this);
         }
 
         /// <summary>

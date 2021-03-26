@@ -366,7 +366,12 @@ namespace Kiln
         /// </summary>
         private void DrawFeaturesSupport()
         {
+            EditorGUILayout.BeginHorizontal();
+
             EditorGUILayout.BeginVertical();
+            
+            // Supported Mock Features
+            EditorGUILayout.LabelField("Supported Mock Features:", EditorStyles.boldLabel);
 
             bool supportsIAP = EditorGUILayout.Toggle("Supports In App Purchases", _settings.SupportsIAP);
             if (supportsIAP != _settings.SupportsIAP)
@@ -404,6 +409,29 @@ namespace Kiln
             }
 
             EditorGUILayout.EndVertical();
+
+            EditorGUILayout.BeginVertical();
+
+            // Build Export Options
+            EditorGUILayout.LabelField("Build Export Options:", EditorStyles.boldLabel);
+
+            bool exportIAP = EditorGUILayout.Toggle("Export IAP State", _settings.ExportIAPState);
+            if (exportIAP != _settings.ExportIAPState)
+            {
+                _settings.ExportIAPState = exportIAP;
+                EditorUtility.SetDirty(_settings);
+            }
+
+            bool exportLeaderboards = EditorGUILayout.Toggle("Export Leaderboards State", _settings.ExportLeaderboardState);
+            if (exportLeaderboards != _settings.ExportLeaderboardState)
+            {
+                _settings.ExportLeaderboardState = exportLeaderboards;
+                EditorUtility.SetDirty(_settings);
+            }
+
+            EditorGUILayout.EndVertical();
+            
+            EditorGUILayout.EndHorizontal();
         }
 
         private void OnGUI()
