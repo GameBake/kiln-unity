@@ -44,6 +44,9 @@ namespace Kiln
 
                 string path = $"{kilnPath}/{Constants.Folders.Settings}";
 
+                // If the folder doesn't exist, we'll create it
+                Directory.CreateDirectory(path);
+
                 // We'll create the settings scriptable object
                 _settings = ScriptableObject.CreateInstance<Settings>();
                 
@@ -366,7 +369,12 @@ namespace Kiln
         /// </summary>
         private void DrawFeaturesSupport()
         {
+            EditorGUILayout.BeginHorizontal();
+
             EditorGUILayout.BeginVertical();
+            
+            // Supported Mock Features
+            EditorGUILayout.LabelField("Supported Mock Features:", EditorStyles.boldLabel);
 
             bool supportsIAP = EditorGUILayout.Toggle("Supports In App Purchases", _settings.SupportsIAP);
             if (supportsIAP != _settings.SupportsIAP)
@@ -404,6 +412,29 @@ namespace Kiln
             }
 
             EditorGUILayout.EndVertical();
+
+            EditorGUILayout.BeginVertical();
+
+            // Build Export Options
+            EditorGUILayout.LabelField("Build Export Options:", EditorStyles.boldLabel);
+
+            bool exportIAP = EditorGUILayout.Toggle("Export IAP State", _settings.ExportIAPState);
+            if (exportIAP != _settings.ExportIAPState)
+            {
+                _settings.ExportIAPState = exportIAP;
+                EditorUtility.SetDirty(_settings);
+            }
+
+            bool exportLeaderboards = EditorGUILayout.Toggle("Export Leaderboards State", _settings.ExportLeaderboardState);
+            if (exportLeaderboards != _settings.ExportLeaderboardState)
+            {
+                _settings.ExportLeaderboardState = exportLeaderboards;
+                EditorUtility.SetDirty(_settings);
+            }
+
+            EditorGUILayout.EndVertical();
+            
+            EditorGUILayout.EndHorizontal();
         }
 
         private void OnGUI()
@@ -417,19 +448,19 @@ namespace Kiln
 
             GUILayout.Space(20);
 
-            if (_settings.SupportsRewardedAds || _settings.SupportsInterstitialAds)
+            if ((_settings.SupportsRewardedAds || _settings.SupportsInterstitialAds) && _ads != null)
             {
                 _ads.DoLayoutList();
                 GUILayout.Space(20);
             }
 
-            if (_settings.SupportsIAP)
+            if (_settings.SupportsIAP && _iaps != null)
             {
                 _iaps.DoLayoutList();
                 GUILayout.Space(20);
             }
 
-            if (_settings.SupportsLeaderboards)
+            if (_settings.SupportsLeaderboards && _leaderboards != null)
             {
                 _leaderboards.DoLayoutList();
                 GUILayout.Space(20);

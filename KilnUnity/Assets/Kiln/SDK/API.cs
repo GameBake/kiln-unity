@@ -799,8 +799,10 @@ namespace Kiln
         }
 
         /// <summary>
-        /// Retrieves a list of purchased <see cref="Kiln.Product"/>. If the platform doesn't support 
-        /// In App Purchases (see <see cref="SupportsIAP"/>) the Task will get an <see cref="Kiln.Exception"/>
+        /// Retrieves a list of purchased <see cref="Kiln.Product"/> that are currently active. By active
+        /// we mean that they are either Non Consumables, or Consumables that have not been consumed yet.
+        /// If the platform doesn't support In App Purchases (see <see cref="SupportsIAP"/>) the Task will 
+        /// get an <see cref="Kiln.Exception"/>
         /// </summary>
         /// <returns>Task that'll return a list of <see cref="Kiln.Product"/> upon completion</returns>
         public static Task<List<IPurchase>> GetPurchasedProducts()
@@ -817,7 +819,7 @@ namespace Kiln
 
             var aTcs = new TaskCompletionSource<List<IPurchase>>();
 
-            aTcs.SetResult(_iap.Purchases);
+            aTcs.SetResult(_iap.NonConsumedPurchases);
 
             return aTcs.Task;
 #endif
@@ -866,13 +868,9 @@ namespace Kiln
                 throw new Kiln.Exception("In App Purchases not supported.");
             }
 
-            var aTcs = new TaskCompletionSource<object>();
+            var task = _iap.ConsumePurchasedProduct(purchaseToken);
 
-            _iap.ConsumePurchasedProduct(purchaseToken);
-
-            aTcs.SetResult(null);
-
-            return aTcs.Task;
+            return task;
 #endif
         }
 
