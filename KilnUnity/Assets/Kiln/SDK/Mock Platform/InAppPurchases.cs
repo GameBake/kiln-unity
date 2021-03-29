@@ -193,53 +193,6 @@ namespace Kiln
         /// <summary>
         /// 
         /// </summary>
-        /// <returns></returns>
-        public List<string> GetProductIDs()
-        {
-            List<string> ids = new List<string>();
-
-            foreach (Product p in _products)
-            {
-                ids.Add(p.GetProductID());
-            }
-
-            return ids;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public List<string> GetNonConsumedIDs()
-        {
-            List<string> ids = new List<string>();
-
-            foreach (Purchase p in _nonConsumedPurchases)
-            {
-                ids.Add(p.GetProductID());
-            }
-
-            return ids;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="productID"></param>
-        /// <returns></returns>
-        public Purchase GetNonConsumedPurchase(string productID)
-        {
-            foreach (Purchase p in _nonConsumedPurchases)
-            {
-                if (p.GetProductID() == productID) return p;
-            }
-
-            throw new Kiln.Exception($"No non consumed IAP with id {productID} found");
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
         /// <param name="productID"></param>
         /// <param name="payload"></param>
         /// <returns></returns>
