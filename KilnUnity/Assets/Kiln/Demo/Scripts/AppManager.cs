@@ -579,7 +579,7 @@ namespace Kiln
                 List<IPurchase> activePurchases = await Kiln.API.GetPurchasedProducts();
                 List<string> tokenList = new List<string>();
 
-                foreach (Purchase p in activePurchases)
+                foreach (IPurchase p in activePurchases)
                 {
                     tokenList.Add(p.GetPurchaseToken());
                 }
