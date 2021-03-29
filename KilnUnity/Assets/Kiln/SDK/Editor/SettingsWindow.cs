@@ -44,6 +44,9 @@ namespace Kiln
 
                 string path = $"{kilnPath}/{Constants.Folders.Settings}";
 
+                // If the folder doesn't exist, we'll create it
+                Directory.CreateDirectory(path);
+
                 // We'll create the settings scriptable object
                 _settings = ScriptableObject.CreateInstance<Settings>();
                 
