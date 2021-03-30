@@ -71,6 +71,9 @@ namespace Kiln
                 product.ID = iap.Id;
                 product.Price = iap.Price.ToString();
                 product.Type = iap.Type;
+                product.CurrencyCode = Kiln.API.Settings.CurrencyCode;
+                product.ImageURI = iap.ImageURI;
+                product.Description = iap.Description;
 
                 _products.Add(product);
             }

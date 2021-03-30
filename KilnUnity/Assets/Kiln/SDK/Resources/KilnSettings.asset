@@ -16,14 +16,20 @@ MonoBehaviour:
   - Id: Non Consumable
     Price: 1000
     Type: 1
+    Description: 
+    ImageURI: 
     MetaData: 
   - Id: Consumable 1
     Price: 200
     Type: 0
+    Description: 
+    ImageURI: 
     MetaData: 
   - Id: Consumable 2
     Price: 300
     Type: 0
+    Description: 
+    ImageURI: 
     MetaData: 
   _ads:
   - Id: Interstitial 1
@@ -38,6 +44,7 @@ MonoBehaviour:
     Type: 2
   - Id: Banner 2
     Type: 2
+  _currencyCode: 51
   _leaderboards:
   - Id: leaderboard
     Type: 0

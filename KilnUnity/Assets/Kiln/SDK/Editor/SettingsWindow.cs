@@ -23,7 +23,8 @@ namespace Kiln
         {
             LoadOrCreateSettings();
 
-            GetWindow<SettingsWindow>(false, "Kiln Settings Editor", true);
+            var windows = GetWindow<SettingsWindow>(false, "Kiln Settings Editor", true);
+            windows.minSize = new Vector2(900, 700);
         }
 
         /// <summary>
@@ -92,6 +93,21 @@ namespace Kiln
                         InAppPurchases.Reset();
                         UnityEditor.AssetDatabase.Refresh();
                     }
+
+                    // We'll setup a project wide selector for mocking the currency IAPs are going to use
+                    Rect currencyCodeRect = new Rect(rect.x + 200, rect.y, 100 - 35, EditorGUIUtility.singleLineHeight);
+                    string label = "Currency";
+                    EditorGUI.LabelField(currencyCodeRect, label);
+                    currencyCodeRect.x += 50;
+                    CurrencyCode currencyCode = _settings.CurrencyCode;
+                    CurrencyCode newCurrencyCode = (CurrencyCode)EditorGUI.EnumPopup(currencyCodeRect, currencyCode);
+
+                    if (newCurrencyCode != currencyCode)
+                    {
+                        _settings.CurrencyCode = newCurrencyCode;
+                        EditorUtility.SetDirty(_settings);
+                    }
+
                 };
                 _iaps.onRemoveCallback = (ReorderableList list) => {
                     _settings.IAPs.RemoveAt(list.index);
@@ -159,7 +175,7 @@ namespace Kiln
             float itemInputYOffset = ((_listItemHeight - EditorGUIUtility.singleLineHeight) / 2);
             
             Rect idRect = new Rect(rect.x + 15f, rect.y + itemInputYOffset, rect.width * 0.7f, EditorGUIUtility.singleLineHeight);
-            string newId = (string) EditorGUI.TextField(idRect, ad.Id);
+            string newId = (string) EditorUtils.TextFieldWithPlaceholder(idRect, ad.Id, "Placement ID");
 
             if (ad.Id != newId)
             {
@@ -213,8 +229,8 @@ namespace Kiln
 
             float itemInputYOffset = ((_listItemHeight - EditorGUIUtility.singleLineHeight) / 2f);
             
-            Rect idRect = new Rect(rect.x + 15f, rect.y + itemInputYOffset, rect.width * 0.5f, EditorGUIUtility.singleLineHeight);
-            string newId = (string) EditorGUI.TextField(idRect, iap.Id);
+            Rect idRect = new Rect(rect.x + 15f, rect.y + itemInputYOffset, rect.width * 0.2f, EditorGUIUtility.singleLineHeight);
+            string newId = (string) EditorUtils.TextFieldWithPlaceholder(idRect, iap.Id, "ID");
 
             if (iap.Id != newId)
             {
@@ -242,7 +258,7 @@ namespace Kiln
                 }
             }
             
-            Rect typeRect = new Rect(rect.x + idRect.width + 30f, rect.y + itemInputYOffset, rect.width * 0.3f - 30f, EditorGUIUtility.singleLineHeight);
+            Rect typeRect = new Rect(rect.x + idRect.width + 30f, rect.y + itemInputYOffset, rect.width * 0.2f - 15f, EditorGUIUtility.singleLineHeight);
             ProductType type = iap.Type;
             ProductType newType = (ProductType)EditorGUI.EnumPopup(typeRect, iap.Type);
 
@@ -254,12 +270,34 @@ namespace Kiln
                 EditorUtility.SetDirty(_settings);
             }
 
-            Rect priceRect = new Rect(rect.x + idRect.width + 45f + typeRect.width, rect.y + itemInputYOffset, rect.width * 0.2f - 45f, EditorGUIUtility.singleLineHeight);
-            float newPrice = EditorGUI.FloatField(priceRect, iap.Price);
+            Rect priceRect = new Rect(rect.x + idRect.width + 45f + typeRect.width, rect.y + itemInputYOffset, rect.width * 0.2f - 15f, EditorGUIUtility.singleLineHeight);
+            float newPrice = EditorUtils.FloatFieldWithPlaceholder(priceRect, iap.Price, "Price");
 
             if (newPrice != iap.Price)
             {
                 iap.Price = newPrice;
+                _settings.IAPs[index] = iap;
+                
+                EditorUtility.SetDirty(_settings);
+            }
+
+            Rect descriptionRect = new Rect(rect.x + idRect.width + 60f + typeRect.width + priceRect.width, rect.y + itemInputYOffset, rect.width * 0.2f - 15f, EditorGUIUtility.singleLineHeight);
+            string newDescription = EditorUtils.TextFieldWithPlaceholder(descriptionRect, iap.Description, "Description");
+
+            if (newDescription != iap.Description)
+            {
+                iap.Description = newDescription;
+                _settings.IAPs[index] = iap;
+                
+                EditorUtility.SetDirty(_settings);
+            }
+
+            Rect imageURIRect = new Rect(rect.x + idRect.width + 75f + typeRect.width + priceRect.width + descriptionRect.width, rect.y + itemInputYOffset, rect.width * 0.2f - 30f, EditorGUIUtility.singleLineHeight);
+            string newImageURI = EditorUtils.TextFieldWithPlaceholder(imageURIRect, iap.ImageURI, "Image URI");
+
+            if (newImageURI != iap.ImageURI)
+            {
+                iap.ImageURI = newImageURI;
                 _settings.IAPs[index] = iap;
                 
                 EditorUtility.SetDirty(_settings);
@@ -280,7 +318,7 @@ namespace Kiln
             float itemInputYOffset = ((_listItemHeight - EditorGUIUtility.singleLineHeight) / 2f);
             
             Rect idRect = new Rect(rect.x + 15f, rect.y + itemInputYOffset, rect.width * 0.5f, EditorGUIUtility.singleLineHeight);
-            string newId = (string) EditorGUI.TextField(idRect, leaderboard.Id);
+            string newId = (string) EditorUtils.TextFieldWithPlaceholder(idRect, leaderboard.Id, "Leaderboard ID");
 
             if (leaderboard.Id != newId)
             {
@@ -336,7 +374,7 @@ namespace Kiln
             float itemInputYOffset = ((_listItemHeight - EditorGUIUtility.singleLineHeight) / 2);
             
             Rect idRect = new Rect(rect.x + 15f, rect.y + itemInputYOffset, rect.width - 15f, EditorGUIUtility.singleLineHeight);
-            string newId = (string) EditorGUI.TextField(idRect, analyticsEvent);
+            string newId = (string) EditorUtils.TextFieldWithPlaceholder(idRect, analyticsEvent, "Event ID");
 
             if (analyticsEvent != newId)
             {

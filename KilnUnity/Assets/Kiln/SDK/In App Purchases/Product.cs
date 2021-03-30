@@ -8,6 +8,7 @@
         string GetDescription();
         string GetImageURI();
         string GetPriceCurrencyCode();
+        string ToString();
     }
 
     public enum ProductType
@@ -23,6 +24,12 @@
         public string Price { set { _price = value; } }
         private ProductType _type;
         public ProductType Type { set { _type = value; } }
+        private string _description;
+        public string Description { set { _description = value; } }
+        private string _imageURI;
+        public string ImageURI { set { _imageURI = value; } }
+        private CurrencyCode _currencyCode;
+        public CurrencyCode CurrencyCode { set { _currencyCode = value; } }
 
         public string GetProductID()
         {
@@ -41,22 +48,28 @@
 
         new public string ToString()
         {
-            return $"-----\nID: {GetProductID()}\nPrice: {GetPrice()}\nType: {GetProductType()}\n";
+            return $@"Product:
+                ID: {GetProductID()}
+                Type: {GetProductType()}
+                Price: {GetPrice()}
+                Currency: {GetPriceCurrencyCode()}
+                Image URI: {GetImageURI()}
+                Description: {GetDescription()}";
         }
 
         public string GetDescription()
         {
-            throw new System.NotImplementedException();
+            return _description;
         }
 
         public string GetImageURI()
         {
-            throw new System.NotImplementedException();
+            return _imageURI;
         }
 
         public string GetPriceCurrencyCode()
         {
-            throw new System.NotImplementedException();
+            return _currencyCode.ToString("G");
         }
     }
 
