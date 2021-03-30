@@ -23,6 +23,8 @@ namespace Kiln
             public string Id;
             public float Price;
             public ProductType Type;
+            public string Description;
+            public string ImageURI;
             public string MetaData;
         }
 
@@ -45,6 +47,12 @@ namespace Kiln
         public List<InAppPurchase> IAPs { get { return _iaps; } }
         [SerializeField] private List<Ad> _ads = new List<Ad>();
         public List<Ad> ADs { get { return _ads; } }
+        [SerializeField] private CurrencyCode _currencyCode = CurrencyCode.GBP;
+        public CurrencyCode CurrencyCode 
+        { 
+            get { return _currencyCode; }
+            set { _currencyCode = value; }
+        }
         [SerializeField] private List<Leaderboard> _leaderboards = new List<Leaderboard>();
         public List<Leaderboard> Leaderboards { get { return _leaderboards; } }
         [SerializeField] private List<string> _analyticsEvents = new List<string>();

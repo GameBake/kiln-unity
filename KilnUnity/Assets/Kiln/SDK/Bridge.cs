@@ -139,7 +139,6 @@ namespace Kiln
 
         public ProductType GetProductType()
         {
-            // TODO: This was added by me (Bruno). Gotta see what's up on the other side.
             return javaInst.Call<ProductType>("getProductType");
         }
 
@@ -695,7 +694,6 @@ namespace Kiln
         /// <param name="evt"></param>
         public void SubmitAnalyticsEvent(string evt)
         {
-            // TODO: This is expecting an AnalyticsEvent on the other end of things... change !
             kiln.Call("submitAnalyticsEvent", evt);
         }
 
