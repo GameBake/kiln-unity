@@ -284,7 +284,7 @@ namespace Kiln
 
             if (_interstitialAds[identifier] == null)
             {
-                // TODO: How does this behave on the bridge ?
+                // TODO: Check how this behaves on the bridge
                 throw new Kiln.Exception($"Interstitial Placement ID: {identifier} not loaded");
             }
             else
@@ -379,7 +379,7 @@ namespace Kiln
 
             if (_rewardedAds[identifier] == null)
             {
-                // TODO: How does this behave on the bridge ?
+                // TODO: Check how this behaves on the bridge
                 throw new Kiln.Exception($"Rewarded Placement ID: {identifier} not loaded");
             }
             else
@@ -435,7 +435,7 @@ namespace Kiln
 
             if (_bannerAds[identifier] != null)
             {
-                // TODO: How does this behave on the bridge ?
+                // TODO: Check how this behaves on the bridge
                 throw new Kiln.Exception($"Banner Placement ID: {identifier} already loaded");
             }
 
@@ -478,7 +478,7 @@ namespace Kiln
 
             if (_bannerAds[identifier] == null)
             {
-                // TODO: How does this behave on the bridge ?
+                // TODO: Check how this behaves on the bridge
                 throw new Kiln.Exception($"Banner Placement ID: {identifier} not loaded");
             }
 
@@ -518,7 +518,7 @@ namespace Kiln
 
             if (_bannerAds[identifier] == null)
             {
-                // TODO: How does this behave on the bridge ?
+                // TODO: Check how this behaves on the bridge
                 throw new Kiln.Exception($"Banner Placement ID: {identifier} not loaded");
             }
 
