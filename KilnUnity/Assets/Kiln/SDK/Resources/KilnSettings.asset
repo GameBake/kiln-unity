@@ -16,8 +16,8 @@ MonoBehaviour:
   - Id: Non Consumable
     Price: 1000
     Type: 1
-    Description: 
-    ImageURI: 
+    Description: Description
+    ImageURI: ImageURI
     MetaData: 
   - Id: Consumable 1
     Price: 200
@@ -30,6 +30,12 @@ MonoBehaviour:
     Type: 0
     Description: 
     ImageURI: 
+    MetaData: 
+  - Id: Consumable 3
+    Price: 250
+    Type: 0
+    Description: This is the third Consumable
+    ImageURI: http://www.google.com
     MetaData: 
   _ads:
   - Id: Interstitial 1
@@ -50,11 +56,14 @@ MonoBehaviour:
     Type: 0
   - Id: leaderboard2
     Type: 0
+  - Id: 
+    Type: 0
   _analyticsEvents:
   - ID1
   - ID2
   - ID3
   - ID4
+  - 
   _supportsInterstitialAds: 1
   _supportsRewardedAds: 1
   _supportsBannerAds: 1

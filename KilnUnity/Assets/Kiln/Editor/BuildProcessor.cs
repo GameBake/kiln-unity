@@ -92,11 +92,17 @@ namespace Kiln
             {
                 public bool Consumable;
                 public string Price;
+                public string Description;
+                public string ImageURI;
+                public string CurrencyCode;
 
-                public IAPSettings(bool consumable, string price)
+                public IAPSettings(bool consumable, string price, string description, string imageURI, string currencyCode)
                 {
                     Consumable = consumable;
                     Price = price;
+                    Description = description;
+                    ImageURI = imageURI;
+                    CurrencyCode = currencyCode;
                 }
             }
 
@@ -121,7 +127,7 @@ namespace Kiln
 
                 foreach (Kiln.Settings.InAppPurchase i in settings.IAPs)
                 {
-                    IAP.Add(i.Id, new IAPSettings(i.Type == ProductType.CONSUMABLE, i.Price.ToString()));
+                    IAP.Add(i.Id, new IAPSettings(i.Type == ProductType.CONSUMABLE, i.Price.ToString(), i.Description, i.ImageURI, settings.CurrencyCode.ToString("G")));
                 }
             }
 
@@ -153,6 +159,9 @@ namespace Kiln
                 //         "id":"z",
                 //         "consumable":false,
                 //         "price":"100.0"
+                //         "description":"Description"
+                //         "imageURI":"http://www.google.com"
+                //         "currencyCode":"100.0"
                 //     }
                 //   },
                 // }
@@ -188,8 +197,11 @@ namespace Kiln
                 {
                     JSONObject node = iap[i.Key].AsObject;
                     node["id"] = i.Key;
-                    node["consumable"] = i.Value.Consumable; ;
-                    node["price"] = i.Value.Price; ;
+                    node["consumable"] = i.Value.Consumable;
+                    node["price"] = i.Value.Price;
+                    node["description"] = i.Value.Description;
+                    node["imageURI"] = i.Value.ImageURI;
+                    node["currencyCode"] = i.Value.CurrencyCode;
                 }
 
                 return data;

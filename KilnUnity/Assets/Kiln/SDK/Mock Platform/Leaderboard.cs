@@ -250,7 +250,7 @@ namespace Kiln
         {
             if (!_data.ContainsKey(PLAYER_KEY))
             {
-                // TODO: How does this behave on the bridge ?
+                // TODO: Check how this behaves on the bridge
                 throw new Kiln.Exception($"User {PLAYER_KEY} not present in leaderboard.");
             }
 
