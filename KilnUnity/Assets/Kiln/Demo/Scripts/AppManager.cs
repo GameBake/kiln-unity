@@ -9,10 +9,6 @@ namespace Kiln
     {
         [SerializeField] private GameObject _initButton;
         [SerializeField] private IDSelector _idSelector;
-        
-        [Header("Ads Buttons")]
-        [SerializeField] private GameObject[] _interstitialsAdsButtons;
-        [SerializeField] private GameObject[] _rewardedAdsButtons;
 
         [Header("Sections")]
         [SerializeField] private GameObject _sectionButtons;
@@ -47,32 +43,6 @@ namespace Kiln
             set
             {
                 _getScoresOffset = int.Parse(value);
-            }
-        }
-
-        /// <summary>
-        /// Once Initialized we can check if we support different features, and thus disable those features
-        /// </summary>
-        private void ConfigureButtons()
-        {
-            // If we don't support interstitials ads, we'll disable the buttons
-            if (!Kiln.API.SupportsInterstitialAds())
-            {
-                Logger.Log("Interstitials Ads not Supported", LogType.Warning);
-                foreach (GameObject go in _interstitialsAdsButtons)
-                {
-                    go.SetActive(false);
-                }
-            }
-
-            // If we don't support rewarded ads, we'll disable the buttons
-            if (!Kiln.API.SupportsRewardedAds())
-            {
-                Logger.Log("Rewarded Ads not Supported", LogType.Warning);
-                foreach (GameObject go in _rewardedAdsButtons)
-                {
-                    go.SetActive(false);
-                }
             }
         }
 
@@ -433,7 +403,7 @@ namespace Kiln
                 string leaderboardID = await _idSelector.SelectID(Kiln.API.Settings.GetLeaderboardIds());
                 _idSelector.Close();
 
-                List<ILeaderboardEntry> entries = await Kiln.API.GetScores(_getScoresAmount, _getScoresOffset, leaderboardID);
+                List<ILeaderboardEntry> entries = await Kiln.API.GetScores(leaderboardID, _getScoresAmount, _getScoresOffset);
 
                 foreach (ILeaderboardEntry entry in entries)
                 {
@@ -523,7 +493,7 @@ namespace Kiln
         {
             try
             {
-                List<IPurchase> purchases = await Kiln.API.GetPurchasedProducts();
+                List<IPurchase> purchases = await Kiln.API.GetPurchases();
 
                 foreach (IPurchase p in purchases)
                 {
@@ -576,7 +546,7 @@ namespace Kiln
             try
             {
                 // First we'll compose a list of purchase Tokens available
-                List<IPurchase> activePurchases = await Kiln.API.GetPurchasedProducts();
+                List<IPurchase> activePurchases = await Kiln.API.GetPurchases();
                 List<string> tokenList = new List<string>();
 
                 foreach (IPurchase p in activePurchases)
