@@ -553,15 +553,15 @@ namespace Kiln
         /// It gets leaderboard scores for all players. If the platform doesn't support leaderboards the Task  
         /// will get an exception <see cref="Kiln.Exception"/>
         /// </summary>
+        /// <param name="id">the leaderboard identifier</param>
         /// <param name="count">number of entries to retrieve. default to 10 if unspecified</param>
         /// <param name="offset">The offset from the top of the leaderboard that entries will be fetched from. default 0 if not specified</param>
-        /// <param name="id">the leaderboard identifier</param>
         /// <returns></returns>
-        public Task<List<ILeaderboardEntry>> GetScores(int count, int offset, string id)
+        public Task<List<ILeaderboardEntry>> GetScores(string id, int count, int offset)
         {
             var aTcs = new TaskCompletionSource<List<ILeaderboardEntry>>();
             
-            kiln.Call("getScores", count, offset, id, new ListCallback<ILeaderboardEntry>() {
+            kiln.Call("getScores", id, count, offset, new ListCallback<ILeaderboardEntry>() {
                 Tcs = aTcs,
                 Wrapper = new AndroidLeaderboardEntry()
             });
@@ -639,14 +639,14 @@ namespace Kiln
         }
 
         /// <summary>
-        /// It gets the list of products already purchased but still unconsumed. If the platform doesn't support 
+        /// It gets the list of purchases still unconsumed. If the platform doesn't support 
         /// purchases the Task will get an exception <see cref="Kiln.Exception"/>
         /// </summary>
         /// <returns>Task</returns>
-        public Task<List<IPurchase>> GetPurchasedProducts()
+        public Task<List<IPurchase>> GetPurchases()
         {
             var aTcs = new TaskCompletionSource<List<IPurchase>>();
-            kiln.Call("getPurchasedProducts", new ListCallback<IPurchase>() {
+            kiln.Call("getPurchases", new ListCallback<IPurchase>() {
                 Tcs = aTcs,
                 Wrapper = new AndroidPurchase()
             });
