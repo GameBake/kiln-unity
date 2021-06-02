@@ -9,7 +9,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Kiln.API.html",
-          "hash": "hQZ4Ege/q7hG5xPjlVHJtw=="
+          "hash": "OS+7gc2tEaq/1U6ncM5j6A=="
         }
       },
       "is_incremental": false,
@@ -21,7 +21,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Kiln.BannerPosition.html",
-          "hash": "MdLhVv3R49deh/xCjjJnFw=="
+          "hash": "c0noM284jPi7atdG/HQYZA=="
         }
       },
       "is_incremental": false,
@@ -33,7 +33,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Kiln.BannerSize.html",
-          "hash": "HmNfmCHqXmGAInf4x7JnPA=="
+          "hash": "Om7pCdEEv3bdVmsbe0B8rQ=="
         }
       },
       "is_incremental": false,
@@ -45,7 +45,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Kiln.Exception.html",
-          "hash": "niq3zhfyTStfw2os/pLS+w=="
+          "hash": "eaik13sCvDBqdnu8rW8ZDQ=="
         }
       },
       "is_incremental": false,
@@ -57,7 +57,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Kiln.IAnalyticEvent.html",
-          "hash": "SygE1bUkPsUb9VIb/2Ftqw=="
+          "hash": "Y2KXtfJ+YWW9018EriOETg=="
         }
       },
       "is_incremental": false,
@@ -69,7 +69,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Kiln.ILeaderboardEntry.html",
-          "hash": "XjMvW9LCX5uzUsm6XQq89Q=="
+          "hash": "t9PaRpow7XAVEBNzx9tJIw=="
         }
       },
       "is_incremental": false,
@@ -81,7 +81,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Kiln.IPlayer.html",
-          "hash": "FmJ/HI7OpIPTkhvPSVWZSA=="
+          "hash": "DGozNifZ0ildlmxb0jKiGg=="
         }
       },
       "is_incremental": false,
@@ -93,7 +93,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Kiln.IProduct.html",
-          "hash": "LpO8zKOyuEMusmTpdaYUMA=="
+          "hash": "niqD3nMdRUah/OtfpXW2TQ=="
         }
       },
       "is_incremental": false,
@@ -105,7 +105,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Kiln.IPurchase.html",
-          "hash": "BmKUBMUl5FrOxUjoEiO39w=="
+          "hash": "iqNV+iOAXlyFwy0dT2Vv1A=="
         }
       },
       "is_incremental": false,
@@ -117,79 +117,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Kiln.IRewardedAdResponse.html",
-          "hash": "5eHkQMxqFYz4MaFL34tmhw=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/Kiln.LeaderboardEntry.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/Kiln.LeaderboardEntry.html",
-          "hash": "V+ek92lJtApr9/6UDeKQ2Q=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/Kiln.Player.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/Kiln.Player.html",
-          "hash": "Y3GbHBNtL22Jdz3KQIKrzg=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/Kiln.Product.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/Kiln.Product.html",
-          "hash": "WMvixLqX5o2JQK5l2bzmuw=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/Kiln.ProductType.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/Kiln.ProductType.html",
-          "hash": "3Mn5VlRmDsLMlmBdG6nSTg=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/Kiln.Purchase.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/Kiln.Purchase.html",
-          "hash": "oy6rBow3cjchZnXoLAJFbg=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/Kiln.RewardedAdResponse.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/Kiln.RewardedAdResponse.html",
-          "hash": "VgcuDuLJudLEK353ObpQ0A=="
+          "hash": "PMyHlOtjWhlGvoFLHP8/vA=="
         }
       },
       "is_incremental": false,
@@ -201,7 +129,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Kiln.html",
-          "hash": "Wy+wDqLG4CeEkysCX5YdIw=="
+          "hash": "sq9Xww3FRn8OP8T3nQiIJw=="
         }
       },
       "is_incremental": false,
@@ -213,10 +141,10 @@
       "output": {
         ".html": {
           "relative_path": "api/index.html",
-          "hash": "BPL/qXL8wfuM+ogkLHgAbA=="
+          "hash": "aG8xyaizVH34fk9qW2+axQ=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -225,7 +153,7 @@
       "output": {
         ".html": {
           "relative_path": "api/toc.html",
-          "hash": "HqkeSLbJ+mO+Nr6ImFJDng=="
+          "hash": "CV4/AfxmEivP94BMnYaN/Q=="
         }
       },
       "is_incremental": false,
@@ -237,7 +165,7 @@
       "output": {
         ".html": {
           "relative_path": "articles/intro.html",
-          "hash": "9yPmnfzR6wC2MxHSbBQMtA=="
+          "hash": "3XWEScESEYfNDF/5NefpBw=="
         }
       },
       "is_incremental": true,
@@ -261,7 +189,7 @@
       "output": {
         ".html": {
           "relative_path": "index.html",
-          "hash": "LMPL4n2h0L0kfIJOo53Sbg=="
+          "hash": "+L8xyxCuZoGx1P32u4G9CA=="
         }
       },
       "is_incremental": true,
@@ -298,8 +226,8 @@
         "ManagedReferenceDocumentProcessor": {
           "can_incremental": true,
           "incrementalPhase": "build",
-          "total_file_count": 17,
-          "skipped_file_count": 1
+          "total_file_count": 11,
+          "skipped_file_count": 9
         },
         "TocDocumentProcessor": {
           "can_incremental": false,
