@@ -32,7 +32,7 @@ namespace Kiln
             string leaderboardID = await _idSelector.SelectID(Kiln.API.Settings.GetLeaderboardIds());
             _idSelector.Close();
 
-            List<ILeaderboardEntry> entries = await Kiln.API.GetScores(1000, 0, leaderboardID);
+            List<ILeaderboardEntry> entries = await Kiln.API.GetScores(leaderboardID, 1000, 0);
 
             _leaderboardData.text = "";
 

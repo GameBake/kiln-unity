@@ -35,7 +35,7 @@ MonoBehaviour:
     Price: 250
     Type: 0
     Description: This is the third Consumable
-    ImageURI: http://www.google.com
+    ImageURI: http://some.image.uri
     MetaData: 
   _ads:
   - Id: Interstitial 1
@@ -56,14 +56,11 @@ MonoBehaviour:
     Type: 0
   - Id: leaderboard2
     Type: 0
-  - Id: 
-    Type: 0
   _analyticsEvents:
   - ID1
   - ID2
   - ID3
   - ID4
-  - 
   _supportsInterstitialAds: 1
   _supportsRewardedAds: 1
   _supportsBannerAds: 1

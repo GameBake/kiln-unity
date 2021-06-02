@@ -658,14 +658,14 @@ namespace Kiln
         /// Retrieves a list of <see cref="Kiln.LeaderboardEntry"/> for all players. If the platform doesn't support leaderboards 
         /// (check <see cref="SupportsLeaderboards"/>) the Task will get an <see cref="Kiln.Exception"/>
         /// </summary>
+        /// <param name="id">Leaderboard identifier</param>
         /// <param name="count">Amount of <see cref="Kiln.LeaderboardEntry"/> to retrieve</param>
         /// <param name="offset">Offset from the top of the Leaderboard that <see cref="Kiln.LeaderboardEntry"/> will be fetched from</param>
-        /// <param name="id">Leaderboard identifier</param>
         /// <returns>Task that'll return a list of <see cref="Kiln.LeaderboardEntry"/> upon completion</returns>
-        public static Task<List<ILeaderboardEntry>> GetScores(int count, int offset, string id)
+        public static Task<List<ILeaderboardEntry>> GetScores(string id, int count, int offset)
         {
 #if ANDROID_DEVICE
-            return Bridge.GetScores(count, offset, id);
+            return Bridge.GetScores(id, count, offset);
 #else
             CheckInitialized();
 
@@ -799,16 +799,16 @@ namespace Kiln
         }
 
         /// <summary>
-        /// Retrieves a list of purchased <see cref="Kiln.Product"/> that are currently active. By active
-        /// we mean that they are either Non Consumables, or Consumables that have not been consumed yet.
+        /// Retrieves a list of active <see cref="Kiln.Purchase"/>. By active we mean that they are
+        /// either for Non Consumables Products, or Consumables Products that have not been consumed yet.
         /// If the platform doesn't support In App Purchases (see <see cref="SupportsIAP"/>) the Task will 
         /// get an <see cref="Kiln.Exception"/>
         /// </summary>
         /// <returns>Task that'll return a list of <see cref="Kiln.Product"/> upon completion</returns>
-        public static Task<List<IPurchase>> GetPurchasedProducts()
+        public static Task<List<IPurchase>> GetPurchases()
         {
 #if ANDROID_DEVICE
-            return Bridge.GetPurchasedProducts();
+            return Bridge.GetPurchases();
 #else
             CheckInitialized();
 
